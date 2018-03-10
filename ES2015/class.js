@@ -25,7 +25,7 @@ Student.prototype.sayHello = function() {
 
 // ES2015
 class Student {
-    construction(firstName, lastName) {
+    constructor(firstName, lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -43,7 +43,7 @@ Student.isStudent = function(obj) {
 
 // ES2015
 class Student {
-    construction(firstName, lastName) {
+    constructor(firstName, lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -75,7 +75,7 @@ Student.prototype.constructor = Student;
 
 // ES2015
 class Person {
-    construction(firstName, lastName) {
+    constructor(firstName, lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
