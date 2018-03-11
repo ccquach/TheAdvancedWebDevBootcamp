@@ -27,3 +27,6 @@ d3.select('#page-title')
     .style('color', '#ffffff')
     .classed('new-class', true)
     .text('D3 is cool!');
+
+// remove elements
+d3.selectAll('div').remove();
