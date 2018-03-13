@@ -34,6 +34,7 @@ var colors = {
   "R": "#ff0000"
 }
 
+// enter selection
 d3.select("#quotes")
     .style("list-style", "none")
   .selectAll("li")
@@ -46,3 +47,11 @@ d3.select("#quotes")
     .style("font-size", d => d.quote.length < 25 ? "2em" : "1em")
     .style("background-color", d => colors[d.rating])
     .style("border-radius", "8px");
+
+// exit selection
+// var nonRQuotes = quotes.filter(movie => movie.rating !== "R");
+
+// d3.selectAll("li")
+//   .data(nonRQuotes, d => d.quote)
+//   .exit()
+//   .remove();
