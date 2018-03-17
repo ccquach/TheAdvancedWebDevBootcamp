@@ -17,10 +17,10 @@ d3.select("form")
 		var text = input.property("value");
 
 		var letters = d3.select("#letters")
-										.selectAll(".letter")
-										.data(getFrequencies(text), function(d) {
-											return d.character;
-										});
+						.selectAll(".letter")
+						.data(getFrequencies(text), function(d) {
+							return d.character;
+						});
 		letters
 				.classed("new", false)
 			.exit()
