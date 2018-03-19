@@ -53,7 +53,7 @@ d3.select("form")
 					.attr("y", d => height - (d.count / 20 * height));
 
 		bar.append("text")
-					.attr("text-anchor", "middle")
+					.style("text-anchor", "middle")
 					.text(d => d.character)
 			 .merge(texts)
 			 		.attr("x", barWidth / 2)
