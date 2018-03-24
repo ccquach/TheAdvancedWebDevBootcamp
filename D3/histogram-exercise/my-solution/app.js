@@ -51,7 +51,7 @@ d3.select("input")
     .property("value", initialBinCount)
     .on("input", function() {
       updateRects(+d3.event.target.value);
-});
+    });
       
 function updateRects(val) {
   var xScale =
