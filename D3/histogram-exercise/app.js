@@ -1,7 +1,7 @@
 var width = 800;
 var height = 500;
 var barPadding = 1;
-var padding = 40;
+var padding = 80;
 var data = regionData.filter(mustHaveKeys);
 
 var xScale =
@@ -17,9 +17,6 @@ var histogram =
 
 var bins = histogram(data);
 
-var count = d3.select("#count");
-count.text(bins.length);
-
 var yScale =
   d3.scaleLinear()
     .domain([0, d3.max(bins, d => d.length)])
@@ -33,13 +30,13 @@ var svg = d3.select("svg");
 
 svg
   .append("g")
-    .classed("xAxis", true)
+    .attr("id", "xAxis")
     .attr("transform", `translate(0, ${height - padding})`)
     .call(xAxis);
 
 svg
   .append("g")
-    .classed("yAxis", true)
+    .classed("id", "yAxis")
     .attr("transform", `translate(${padding}, 0)`)
     .call(yAxis);
 
@@ -47,17 +44,26 @@ svg
   .append("text")
     .attr("x", width / 2)
     .attr("y", height - padding)
-    .attr("dy", "2.2em")
-    .attr("text-anchor", "middle")
+    .attr("dy", padding / 2)
+    .style("text-anchor", "middle")
     .text("Median Age");
     
 svg
   .append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -height / 2)
-    .attr("dy", "0.7em")
-    .attr("text-anchor", "middle")
+    .attr("dy", padding / 2)
+    .style("text-anchor", "middle")
     .text("Frequency");
+
+svg
+  .append("text")
+  .attr("id", "count")
+  .attr("x", width / 2)
+  .attr("y", height - padding)
+  .attr("dy", "4.5em")
+  .style("text-anchor", "middle")
+  .text(`Number of bins: ${bins.length}`);
 
 var bars =
   svg
@@ -88,18 +94,21 @@ d3.select("input")
       bins = histogram(data);
       yScale.domain([0, d3.max(bins, d => d.length)]);
       yAxis = d3.axisLeft(yScale);
-      count.text(bins.length);
 
       xAxis.tickValues(ticks);
       svg
-        .select(".xAxis")
+        .select("#xAxis")
           .attr("transform", `translate(0, ${height - padding})`)
           .call(xAxis);
 
       svg
-        .select(".yAxis")
+        .select("#yAxis")
           .attr("transform", `translate(${padding}, 0)`)
           .call(yAxis);
+
+      svg
+        .select("#count")
+        .text(`Number of bins: ${bins.length}`);
 
       bars =
         d3.select("svg")
