@@ -1,8 +1,8 @@
 var width = 800;
-var height = 500;
+var height = 600;
 var barPadding = 1;
 var padding = 80;
-var data = regionData.filter(mustHaveKeys);
+var data = regionData.filter(d => d.medianAge !== null);
 
 var xScale =
   d3.scaleLinear()
@@ -133,13 +133,3 @@ d3.select("input")
           })
           .attr("fill", "#0000ff");
     });
-
-function mustHaveKeys(obj) {
-  var keys = [
-    "medianAge"
-  ];
-  for (var i = 0; i < keys.length; i++) {
-    if (obj[keys[i]] === null) return false;
-  }
-  return true;
-}
