@@ -1,4 +1,9 @@
-svg {
-  margin: 0 auto;
+svg,
+input {
+  margin: 0 auto 10px;
   display: block;
+}
+
+p {
+  text-align: center;
 }

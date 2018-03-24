@@ -1,10 +1,8 @@
-var width = 600;
-var height = 400;
+var width = 800;
+var height = 500;
 var barPadding = 1;
 var padding = 40;
 var data = regionData.filter(mustHaveKeys);
-var minAge = d3.min(data, d => d.medianAge);
-var maxAge = d3.max(data, d => d.medianAge);
 
 var xScale =
   d3.scaleLinear()
@@ -14,10 +12,13 @@ var xScale =
 var histogram = 
   d3.histogram()
       .domain(xScale.domain())
-      .thresholds(50)
+      .thresholds(xScale.ticks())
       .value(d => d.medianAge);
 
 var bins = histogram(data);
+
+var count = d3.select("#count");
+count.text(bins.length);
 
 var yScale =
   d3.scaleLinear()
@@ -32,13 +33,15 @@ var svg = d3.select("svg");
 
 svg
   .append("g")
-  .attr("transform", `translate(0, ${height - padding})`)
-  .call(xAxis);
+    .classed("xAxis", true)
+    .attr("transform", `translate(0, ${height - padding})`)
+    .call(xAxis);
 
 svg
   .append("g")
-  .attr("transform", `translate(${padding}, 0)`)
-  .call(yAxis);
+    .classed("yAxis", true)
+    .attr("transform", `translate(${padding}, 0)`)
+    .call(yAxis);
 
 svg
   .append("text")
@@ -52,7 +55,7 @@ svg
   .append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -height / 2)
-    .attr("dy", "1.0em")
+    .attr("dy", "0.7em")
     .attr("text-anchor", "middle")
     .text("Frequency");
 
@@ -74,42 +77,53 @@ var bars =
       })
       .attr("fill", "#0000ff");
 
-// d3.select("input")
-//     .property("min", minAge)
-//     .property("max", maxAge)
-//     .property("value", minAge)
-//     .on("input", function() {
-//       var subscribers = +d3.event.target.value;
-//       subscriberData = data.filter(d => d.subscribersPer100 === subscribers);
-//       xScale.domain([0, d3.max(subscriberData, d => d.medianAge)]);
-//       histogram.domain(xScale.domain())
-//                .thresholds(xScale.ticks());
-//       bins = histogram(subscriberData);
-//       yScale.domain([0, d3.max(bins, d => d.length)]);
+d3.select("input")
+    .property("min", 1)
+    .property("max", 62)
+    .property("value", xScale.ticks().length)
+    .on("input", function() {
+      var numBins = +d3.event.target.value;
+      var ticks = xScale.ticks(numBins);
+      histogram.thresholds(ticks);
+      bins = histogram(data);
+      yScale.domain([0, d3.max(bins, d => d.length)]);
+      yAxis = d3.axisLeft(yScale);
+      count.text(bins.length);
 
-//       bars =
-//         d3.select("svg")
-//           .selectAll(".bar")
-//           .data(bins);
+      xAxis.tickValues(ticks);
+      svg
+        .select(".xAxis")
+          .attr("transform", `translate(0, ${height - padding})`)
+          .call(xAxis);
 
-//       bars
-//         .exit()
-//         .remove();
+      svg
+        .select(".yAxis")
+          .attr("transform", `translate(${padding}, 0)`)
+          .call(yAxis);
 
-//       bars
-//         .enter()
-//         .append("rect")
-//           .classed("bar", true)
-//         .merge(bars)
-//           .attr("x", d => xScale(d.x0))
-//           .attr("y", d => yScale(d.length))
-//           .attr("width", d => {
-//             var width = xScale(d.x1) - xScale(d.x0) - barPadding;
-//             return width < 0 ? 0 : width;
-//           })
-//           .attr("height", d => height - yScale(d.length))
-//           .attr("fill", "#0000ff");
-//     });
+      bars =
+        d3.select("svg")
+          .selectAll(".bar")
+          .data(bins);
+
+      bars
+        .exit()
+        .remove();
+
+      bars
+        .enter()
+        .append("rect")
+          .classed("bar", true)
+        .merge(bars)
+          .attr("x", d => xScale(d.x0))
+          .attr("y", d => yScale(d.length))
+          .attr("height", d => height - yScale(d.length) - padding)
+          .attr("width", d => {
+            var width = xScale(d.x1) - xScale(d.x0) - barPadding;
+            return width < 0 ? 0 : width;
+          })
+          .attr("fill", "#0000ff");
+    });
 
 function mustHaveKeys(obj) {
   var keys = [
