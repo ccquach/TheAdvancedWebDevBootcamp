@@ -69,7 +69,7 @@ function makeGraph(year) {
   var innerArcs = 
     d3.pie()
       .value(d => d.births)
-      .sort((a,b) => months.indexOf(a.month) - months.indexOf(b.month))
+      .sort((a,b) => quarters.indexOf(a.quarter) - quarters.indexOf(b.quarter))
       (quarterData);
 
   var innerPath =
