@@ -34,6 +34,11 @@ var yAxis =
     .tickSize(-width + 2 * padding)
     .tickSizeOuter(0);
 
+var tooltip =
+  d3.select("body")
+    .append("div")
+      .classed("tooltip", true);
+
 var svg = d3.select("svg");
 
 // Axes
@@ -87,7 +92,11 @@ svg
   .attr("r", d => rScale(d.medianAge))
   .attr("fill", d => fScale(d.urbanPopulationRate))
   .attr("stroke", "#fff")
-  .attr("stroke-width", "0.5px");
+  .attr("stroke-width", "0.5px")
+  .on("mousemove", showTooltip)
+  .on("touchstart", showTooltip)
+  .on("mouseout", hideTooltip)
+  .on("touchend", hideTooltip);
 
 function mustHaveKeys(obj) {
   var keys = [
@@ -100,4 +109,21 @@ function mustHaveKeys(obj) {
     if (obj[keys[i]] === null) return false;
   }
   return true;
+}
+
+function showTooltip(d) {
+  tooltip
+    .style("opacity", 1)
+    .style("left", d3.event.x - (tooltip.node().offsetWidth / 2) + "px")
+    .style("top", d3.event.y + 25 + "px")
+    .html(`
+      <p>Region: ${d.region}</p>
+      <p>Subscribers per 100: ${d.subscribersPer100}</p>
+      <p>Adult Literacy Rate: ${d.adultLiteracyRate}</p>
+    `);
+}
+
+function hideTooltip() {
+  tooltip
+    .style("opacity", 0);
 }
