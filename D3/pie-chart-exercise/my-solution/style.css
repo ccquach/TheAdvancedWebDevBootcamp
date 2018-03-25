@@ -1,0 +1,14 @@
+svg,
+input {
+  margin: 0 auto;
+  display: block;
+}
+
+.outerArc,
+.innerArc {
+  stroke: black;
+}
+
+h1 {
+  text-align: center;
+}
