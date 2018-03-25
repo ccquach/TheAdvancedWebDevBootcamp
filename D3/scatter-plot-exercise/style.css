@@ -21,3 +21,13 @@ svg {
 .tooltip p {
   margin: 0;
 }
+
+.tooltip:before {
+  content: ' ';
+  position: absolute;
+  border: 8px solid transparent;
+  border-bottom-color: black;
+  top: -18px;
+  left: 50%;
+  margin-left: -6px;
+}
