@@ -1,7 +1,7 @@
 var width = 600;
 var height = 600;
 var barPadding = 1;
-var padding = 20;
+var padding = 50;
 var minYear = d3.min(birthData, d => d.year);
 var maxYear = d3.max(birthData, d => d.year);
 
@@ -9,6 +9,15 @@ var bars =
   d3.select("svg")
       .attr("width", width)
       .attr("height", height);
+
+bars
+  .append("text")
+    .classed("title", true)
+    .text(`Birth Data in ${minYear}`)
+    .attr("x", width / 2)
+    .attr("y", 30)
+    .style("text-anchor", "middle")
+    .style("font-size", "1.5em");
 
 d3.select("input")
     .property("min", minYear)
@@ -41,6 +50,8 @@ function buildGraph(year) {
       .domain([0, d3.max(bins, d => d.length)])
       .range([height, 0]);
 
+  var title = d3.select(".title");
+
   bars =
     d3.select("svg")
       .selectAll(".bar")
@@ -61,6 +72,19 @@ function buildGraph(year) {
 
   g.merge(bars)
       .select("rect")
+        .transition()
+        .duration(850)
+        .ease(d3.easeQuadInOut)
+        .on("start", (d, i) => {
+          if (i === 0) {
+            title.text(`Updating to ${year} data...`);
+          }
+        })
+        .on("end", (d, i, node) => {
+          if (i === node.length - 1) {
+            title.text(`Birth Data in ${year}`);
+          }
+        })
         .attr("x", (d,i) => xScale(d.x0))
         .attr("y", d => yScale(d.length))
         .attr("height", d => height - yScale(d.length))
