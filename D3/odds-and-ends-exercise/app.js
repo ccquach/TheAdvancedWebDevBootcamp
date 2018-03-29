@@ -3,19 +3,24 @@ d3.queue()
     return {
       country: row["Country Name"],
       countryCode: row["Country Code"],
-      co2Emissions: row["2000"]
+      co2Emissions: +row["2000"]
     };
   })
   .defer(d3.csv, './data/methane-emissions.csv', function(row) {
     return {
       country: row["Country Name"],
       countryCode: row["Country Code"],
-      methaneEmissions: row["2000"]
+      methaneEmissions: +row["2000"]
     };
   })
-  .await(function(err, co2, methane) {
+  .await(function(err, co2Array, methaneArray) {
     if (err) throw err;
 
-    console.log(co2);
-    console.log(methane);
+    // get data for each country
+    var data = co2Array.map(co2 => {
+      co2.methaneEmissions = methaneArray.filter(methane => methane.countryCode === co2.countryCode)[0].methaneEmissions;
+      return co2;
+    });
+    
+    
   })
