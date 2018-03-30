@@ -1,4 +1,11 @@
 d3.queue()
+  .defer(d3.csv, './data/population.csv', function(row) {
+    return {
+      country: row["Country Name"],
+      countryCode: row["Country Code"],
+      population: +row["1990"]
+    }
+  })
   .defer(d3.csv, './data/co2-emissions.csv', function(row) {
     return {
       country: row["Country Name"],
@@ -27,15 +34,16 @@ d3.queue()
       urbanPop: +row["1990"]
     };
   })
-  .await(function(err, co2Res, methaneRes, renewRes, urbanPopRes) {
+  .await(function(err, popRes, co2Res, methaneRes, renewRes, urbanPopRes) {
     if (err) throw err;
     
     // get data for each country
-    var data = co2Res.map(co2 => {
-      co2.methaneEmissions = methaneRes.filter(methane => methane.countryCode === co2.countryCode)[0].methaneEmissions;
-      co2.renewConsumption = renewRes.filter(renew => renew.countryCode === co2.countryCode)[0].renewConsumption;
-      co2.urbanPop = urbanPopRes.filter(pop => pop.countryCode === co2.countryCode)[0].urbanPop;
-      return co2;
+    var data = popRes.map(pop => {
+      pop.co2Emissions = co2Res.filter(co2 => co2.countryCode === pop.countryCode)[0].co2Emissions / pop.population;
+      pop.methaneEmissions = methaneRes.filter(methane => methane.countryCode === pop.countryCode)[0].methaneEmissions / pop.population;
+      pop.renewConsumption = renewRes.filter(renew => renew.countryCode === pop.countryCode)[0].renewConsumption;
+      pop.urbanPop = urbanPopRes.filter(uPop => uPop.countryCode === pop.countryCode)[0].urbanPop;
+      return pop;
     });
     console.log(data);
     // plot data
@@ -64,11 +72,27 @@ d3.queue()
         .domain(d3.extent(data, d => d.urbanPop))
         .range([5, 30]);
 
+    // axes
+    var xAxis = d3.axisBottom(xScale);
+
+    var yAxis = d3.axisLeft(yScale);
+
     // build graph
     var svg = 
       d3.select("svg")
           .attr("width", width)
           .attr("height", height);
+
+    // axes
+    svg
+      .append("g")
+      .attr("transform", `translate(0, ${height - padding})`)
+      .call(xAxis);
+
+    svg
+      .append("g")
+      .attr("transform", `translate(${padding}, 0)`)
+      .call(yAxis);
 
     // bind data
     var circle =
