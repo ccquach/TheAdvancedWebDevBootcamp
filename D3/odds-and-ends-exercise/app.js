@@ -3,25 +3,33 @@ d3.queue()
     return {
       country: row["Country Name"],
       countryCode: row["Country Code"],
-      co2Emissions: +row["2000"]
+      co2Emissions: +row["1990"]
     };
   })
   .defer(d3.csv, './data/methane-emissions.csv', function(row) {
     return {
       country: row["Country Name"],
       countryCode: row["Country Code"],
-      methaneEmissions: +row["2000"]
+      methaneEmissions: +row["1990"]
     };
   })
-  .await(function(err, co2Res, methaneRes) {
+  .defer(d3.csv, './data/renewable-energy-consumption.csv', function(row) {
+    return {
+      country: row["Country Name"],
+      countryCode: row["Country Code"],
+      renewConsumption: +row["1990"]
+    };
+  })
+  .await(function(err, co2Res, methaneRes, renewRes) {
     if (err) throw err;
-
+    
     // get data for each country
     var data = co2Res.map(co2 => {
       co2.methaneEmissions = methaneRes.filter(methane => methane.countryCode === co2.countryCode)[0].methaneEmissions;
+      co2.renewConsumption = renewRes.filter(renew => renew.countryCode === co2.countryCode)[0].renewConsumption;
       return co2;
     });
-    
+    console.log(data);
     // plot data
     var width = 600;
     var height = 600;
@@ -37,6 +45,11 @@ d3.queue()
       d3.scaleLinear()
         .domain(d3.extent(data, d => d.methaneEmissions))
         .range([height - padding, padding]);
+
+    var fScale =
+      d3.scaleLinear()
+        .domain(d3.extent(data, d => d.renewConsumption))
+        .range(["black", "green"]);
 
     // build graph
     var svg = 
@@ -63,7 +76,7 @@ d3.queue()
         .attr("cx", d => xScale(d.co2Emissions))
         .attr("cy", d => yScale(d.methaneEmissions))
         .attr("r", "25px")
-        .attr("fill", "#000")
+        .attr("fill", d => fScale(d.renewConsumption))
         .attr("stroke", "#fff")
         .attr("stroke-width", "0.5px");
   })
