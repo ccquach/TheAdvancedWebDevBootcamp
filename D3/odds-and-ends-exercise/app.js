@@ -51,18 +51,18 @@ document.addEventListener("DOMContentLoaded", function() {
       // plot data
       var width = 800;
       var height = 800;
-      var padding = 50;
+      var padding = 60;
 
       // scales
       var xScale =
         d3.scaleLinear()
           .domain(d3.extent(data, d => d.co2Emissions))
-          .range([padding * 2, width - padding * 2]);
+          .range([padding * 1.7, width - padding * 1.7]);
 
       var yScale =
         d3.scaleLinear()
           .domain(d3.extent(data, d => d.methaneEmissions))
-          .range([height - padding * 2, padding * 2]);
+          .range([height - padding * 1.7, padding * 1.7]);
 
       var fScale =
         d3.scaleLinear()
@@ -95,6 +95,30 @@ document.addEventListener("DOMContentLoaded", function() {
         .append("g")
         .attr("transform", `translate(${padding}, 0)`)
         .call(yAxis);
+
+      // axis labels
+      svg
+        .append("text")
+          .attr("x", width / 2)
+          .attr("dy", height - padding / 5)
+          .style("text-anchor", "middle")
+          .text("CO2 Emissions (kt per person)");
+
+      svg
+        .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("x", -height / 2)
+          .attr("dy", padding / 5)
+          .style("text-anchor", "middle")
+          .text("Methane Emissions (kt of CO2 equivalent per person");
+
+      svg
+        .append("text")
+          .attr("x", width / 2)
+          .attr("dy", padding)
+          .style("text-anchor", "middle")
+          .style("font-size", "2.0em")
+          .text(`Methane vs. CO2 emissions per capita (1990)`)
 
       // bind data
       var circle =
