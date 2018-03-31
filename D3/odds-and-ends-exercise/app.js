@@ -38,13 +38,14 @@ d3.queue()
     if (err) throw err;
     
     // get data for each country
-    var data = popRes.map(pop => {
+    var allData = popRes.map(pop => {
       pop.co2Emissions = co2Res.filter(co2 => co2.countryCode === pop.countryCode)[0].co2Emissions / pop.population;
       pop.methaneEmissions = methaneRes.filter(methane => methane.countryCode === pop.countryCode)[0].methaneEmissions / pop.population;
       pop.renewConsumption = renewRes.filter(renew => renew.countryCode === pop.countryCode)[0].renewConsumption;
       pop.urbanPop = urbanPopRes.filter(uPop => uPop.countryCode === pop.countryCode)[0].urbanPop;
       return pop;
     });
+    var data = allData.filter(mustHaveKeys);
     console.log(data);
     // plot data
     var width = 600;
@@ -117,3 +118,16 @@ d3.queue()
         .attr("stroke", "#fff")
         .attr("stroke-width", "0.5px");
   })
+
+  function mustHaveKeys(obj) {
+    var keys = [
+      "co2Emissions",
+      "methaneEmissions",
+      "renewConsumption",
+      "urbanPop"
+    ];
+    for (var i = 0; i < keys.length; i++) {
+      if (isNaN(obj[keys[i]])) return false;
+    }
+    return true;
+  }
