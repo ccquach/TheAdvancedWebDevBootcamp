@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return pop;
       });
       var data = allData.filter(mustHaveKeys);
-      console.log(`YEAR: ${year}`);
-      console.log(data);
+      // console.log(`YEAR: ${year}`);
+      // console.log(data);
 
       // scales
       var xScale =
@@ -124,12 +124,16 @@ document.addEventListener("DOMContentLoaded", function() {
         .enter()
           .append("circle")
         .merge(circle)
+          .attr("stroke", "#fff")
+          .attr("stroke-width", "0.5px")
+        .transition()
+        .duration(800)
+        .delay((d, i) => i * 2)
+        .ease(d3.easeSinIn)
           .attr("cx", d => xScale(d.co2Emissions))
           .attr("cy", d => yScale(d.methaneEmissions))
           .attr("r", d => rScale(d.urbanPop))
-          .attr("fill", d => fScale(d.renewConsumption))
-          .attr("stroke", "#fff")
-          .attr("stroke-width", "0.5px");
+          .attr("fill", d => fScale(d.renewConsumption));
     });
   }
 
