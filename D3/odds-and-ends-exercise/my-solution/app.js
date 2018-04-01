@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
       .attr("x", -height / 2)
       .attr("dy", padding / 5)
       .style("text-anchor", "middle")
-      .text("Methane Emissions (kt of CO2 equivalent per person");
+      .text("Methane Emissions (kt of CO2 equivalent per person)");
 
   // title
   svg
@@ -45,6 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
       .attr("dy", padding)
       .style("text-anchor", "middle")
       .style("font-size", "1.5em");
+
+  // tooltip
+  var tooltip =
+    d3.select("body")
+      .append("div")
+        .classed("tooltip", true);
     
   buildGraph(minYear);
 
@@ -69,8 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return pop;
       });
       var data = allData.filter(mustHaveKeys);
-      // console.log(`YEAR: ${year}`);
-      // console.log(data);
+      console.log(data);
 
       // scales
       var xScale =
@@ -141,6 +146,10 @@ document.addEventListener("DOMContentLoaded", function() {
             .attr("stroke-width", "1px")
             .attr("cx", d => xScale(d.co2Emissions))
             .attr("cy", d => yScale(d.methaneEmissions))
+            .on("mousemove", showTooltip)
+            .on("touchstart", showTooltip)
+            .on("mouseout", hideTooltip)
+            .on("touchend", hideTooltip)
         .merge(circle)
         .transition(t)
         .delay((d, i) => i * 3)
@@ -200,5 +209,24 @@ document.addEventListener("DOMContentLoaded", function() {
       if (isNaN(obj[keys[i]]) || obj[keys[i]] === 0) return false;
     }
     return true;
+  }
+
+  function showTooltip(d) {
+    tooltip
+      .style("opacity", 1)
+      .style("left", d3.event.x - (tooltip.node().offsetWidth / 2) + "px")
+      .style("top", d3.event.y - (tooltip.node().offsetHeight + 10) + "px")
+      .html(`
+        <p>Region: ${d.country}</p>
+        <p>Methane per capita: ${d.methaneEmissions.toFixed(4)}</p>
+        <p>CO2 per capita: ${d.co2Emissions.toFixed(4)}</p>
+        <p>Renewable energy: ${d.renewConsumption.toFixed(2)}%</p>
+        <p>Urban population: ${d.urbanPop.toFixed(2)}%</p>
+      `);
+  }
+
+  function hideTooltip() {
+    tooltip
+      .style("opacity", 0);
   }
 });
