@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-  var width = 800;
-  var height = 800;
+  var width = 700;
+  var height = 700;
   var padding = 60;
   var minYear = 1990;
   var maxYear = 2012;
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
       .attr("x", width / 2)
       .attr("dy", padding)
       .style("text-anchor", "middle")
-      .style("font-size", "2.0em");
+      .style("font-size", "1.5em");
     
   buildGraph(minYear);
 
@@ -76,12 +76,12 @@ document.addEventListener("DOMContentLoaded", function() {
       var xScale =
         d3.scaleLinear()
           .domain(d3.extent(data, d => d.co2Emissions))
-          .range([padding * 1.7, width - padding * 1.7]);
+          .range([padding * 1.5, width - padding * 1.5]);
 
       var yScale =
         d3.scaleLinear()
           .domain(d3.extent(data, d => d.methaneEmissions))
-          .range([height - padding * 1.7, padding * 1.7]);
+          .range([height - padding * 1.5, padding * 1.5]);
 
       var fScale =
         d3.scaleLinear()
@@ -108,30 +108,42 @@ document.addEventListener("DOMContentLoaded", function() {
       d3.select(".title")
           .text(`Methane vs. CO2 emissions per capita (${year})`);
 
-      // bind data
+      // update data
+      var t = 
+        d3.transition()
+          .duration(1000);
+
       var circle =
         svg
           .selectAll("circle")
           .data(data);
+      
+      // update
+      circle
+        .transition(t)
+        .delay((d, i) => i * 5)
+        .ease(d3.easeSinInOut)
+          .attr("cx", d => xScale(d.co2Emissions))
+          .attr("cy", d => yScale(d.methaneEmissions));
 
       // remove old data
       circle
         .exit()
-        .remove();
+        .transition(t)
+          .attr("r", 0)
+          .remove();
 
       // add element for new nodes
       circle
         .enter()
           .append("circle")
+            .attr("stroke", "#fff")
+            .attr("stroke-width", "1px")
+            .attr("cx", d => xScale(d.co2Emissions))
+            .attr("cy", d => yScale(d.methaneEmissions))
         .merge(circle)
-          .attr("stroke", "#fff")
-          .attr("stroke-width", "0.5px")
-        .transition()
-        .duration(800)
-        .delay((d, i) => i * 2)
-        .ease(d3.easeSinIn)
-          .attr("cx", d => xScale(d.co2Emissions))
-          .attr("cy", d => yScale(d.methaneEmissions))
+        .transition(t)
+        .delay((d, i) => i * 3)
           .attr("r", d => rScale(d.urbanPop))
           .attr("fill", d => fScale(d.renewConsumption));
     });
