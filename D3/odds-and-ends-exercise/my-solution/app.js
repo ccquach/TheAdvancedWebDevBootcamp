@@ -68,24 +68,23 @@ document.addEventListener("DOMContentLoaded", function() {
       
       // get data for each country
       var allData = popRes.map(pop => {
-        pop.co2Emissions = co2Res.filter(co2 => co2.countryCode === pop.countryCode)[0].co2Emissions / pop.population;
-        pop.methaneEmissions = methaneRes.filter(methane => methane.countryCode === pop.countryCode)[0].methaneEmissions / pop.population;
+        pop.co2Emissions = co2Res.filter(co2 => co2.countryCode === pop.countryCode)[0].co2Emissions;
+        pop.methaneEmissions = methaneRes.filter(methane => methane.countryCode === pop.countryCode)[0].methaneEmissions;
         pop.renewConsumption = renewRes.filter(renew => renew.countryCode === pop.countryCode)[0].renewConsumption;
         pop.urbanPop = urbanPopRes.filter(uPop => uPop.countryCode === pop.countryCode)[0].urbanPop;
         return pop;
       });
       var data = allData.filter(mustHaveKeys);
-      console.log(data);
 
       // scales
       var xScale =
         d3.scaleLinear()
-          .domain(d3.extent(data, d => d.co2Emissions))
+          .domain(d3.extent(data, d => d.co2Emissions / d.population))
           .range([padding * 1.5, width - padding * 1.5]);
 
       var yScale =
         d3.scaleLinear()
-          .domain(d3.extent(data, d => d.methaneEmissions))
+          .domain(d3.extent(data, d => d.methaneEmissions / d.population))
           .range([height - padding * 1.5, padding * 1.5]);
 
       var fScale =
@@ -128,8 +127,8 @@ document.addEventListener("DOMContentLoaded", function() {
         .transition(t)
         .delay((d, i) => i * 5)
         .ease(d3.easeSinInOut)
-          .attr("cx", d => xScale(d.co2Emissions))
-          .attr("cy", d => yScale(d.methaneEmissions));
+          .attr("cx", d => xScale(d.co2Emissions / d.population))
+          .attr("cy", d => yScale(d.methaneEmissions / d.population));
 
       // remove old data
       circle
@@ -144,8 +143,8 @@ document.addEventListener("DOMContentLoaded", function() {
           .append("circle")
             .attr("stroke", "#fff")
             .attr("stroke-width", "1px")
-            .attr("cx", d => xScale(d.co2Emissions))
-            .attr("cy", d => yScale(d.methaneEmissions))
+            .attr("cx", d => xScale(d.co2Emissions / d.population))
+            .attr("cy", d => yScale(d.methaneEmissions / d.population))
             .on("mousemove", showTooltip)
             .on("touchstart", showTooltip)
             .on("mouseout", hideTooltip)
@@ -218,8 +217,8 @@ document.addEventListener("DOMContentLoaded", function() {
       .style("top", d3.event.y - (tooltip.node().offsetHeight + 10) + "px")
       .html(`
         <p>Region: ${d.country}</p>
-        <p>Methane per capita: ${d.methaneEmissions.toFixed(4)}</p>
-        <p>CO2 per capita: ${d.co2Emissions.toFixed(4)}</p>
+        <p>Methane per capita: ${(d.methaneEmissions / d.population).toFixed(4)}</p>
+        <p>CO2 per capita: ${(d.co2Emissions / d.population).toFixed(4)}</p>
         <p>Renewable energy: ${d.renewConsumption.toFixed(2)}%</p>
         <p>Urban population: ${d.urbanPop.toFixed(2)}%</p>
       `);
