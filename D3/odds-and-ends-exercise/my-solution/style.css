@@ -18,13 +18,12 @@ input {
   margin: 0;
 }
 
-.tooltip:before {
-  content: '';
+.tooltip:after {
+  content: ' ';
   position: absolute;
   border: 12px solid transparent;
   border-top-color: red;
-  top: 100%;
   left: 50%;
-  margin-top: 5px;
+  margin-top: 20px;
   margin-left: -6px;
 }
