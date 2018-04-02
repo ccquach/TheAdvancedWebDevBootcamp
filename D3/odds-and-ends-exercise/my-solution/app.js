@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return pop;
       });
       var data = allData.filter(mustHaveKeys);
-
+      console.log(data);
       // scales
       var xScale =
         d3.scaleLinear()
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function() {
       var circle =
         svg
           .selectAll("circle")
-          .data(data);
+          .data(data, d => d.country);
       
       // update
       circle
