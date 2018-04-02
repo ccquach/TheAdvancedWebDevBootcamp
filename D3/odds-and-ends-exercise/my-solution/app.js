@@ -98,15 +98,11 @@ document.addEventListener("DOMContentLoaded", function() {
           .range([5, 30]);
 
       // axes
-      var xAxis = d3.axisBottom(xScale);
-
       d3.select(".x-axis")
-        .call(xAxis);
-
-      var yAxis = d3.axisLeft(yScale);
+        .call(d3.axisBottom(xScale));
 
       d3.select(".y-axis")
-        .call(yAxis);
+        .call(d3.axisLeft(yScale));
 
       // title
       d3.select(".title")
