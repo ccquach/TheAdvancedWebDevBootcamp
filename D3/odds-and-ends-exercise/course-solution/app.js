@@ -84,7 +84,7 @@ d3.queue()
           .call(d3.axisLeft(yScale));
 
       d3.select(".title")
-          .text(`Methane vs. CO2 emissions per capital (${year})`);
+          .text(`Methane vs. CO2 emissions per capita (${year})`);
 
       var update = 
         svg.selectAll("circle")
