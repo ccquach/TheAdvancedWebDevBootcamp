@@ -7,10 +7,17 @@
 </head>
 <body>
   <input type="range" step="1">
+  <div>
+    <input type="radio" name="units" value="total" checked>
+    <label for="total">Emissions</label>
+    <input type="radio" name="units" value="perCapita">
+    <label for="perCapita">Emissions Per Capita</label>
+  </div>
   <svg 
     version="1.1"
     baseProfile="full"
-    xmlns="http://www.w3.org/2000/svg" >
+    xmlns="http://www.w3.org/2000/svg"
+    id="map" >
   </svg>
 
   <script src="https://d3js.org/d3.v4.js"></script>

@@ -21,7 +21,7 @@ d3.queue()
       var countries = geoData.filter(d => d.id === row.countryCode);
       countries.forEach(country => country.properties = row);
     });
-    
+    debugger
     var width = 960;
     var height = 600;
 
