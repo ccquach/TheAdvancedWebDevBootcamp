@@ -8,10 +8,10 @@
 <body>
   <input type="range" step="1">
   <div>
-    <input type="radio" name="units" value="total" checked>
-    <label for="total">Emissions</label>
-    <input type="radio" name="units" value="perCapita">
-    <label for="perCapita">Emissions Per Capita</label>
+    <input type="radio" name="units" value="Emissions" checked>
+    <label for="Emissions">Emissions</label>
+    <input type="radio" name="units" value="Emissions Per Capita">
+    <label for="Emissions Per Capita">Emissions Per Capita</label>
   </div>
   <svg 
     version="1.1"
@@ -20,6 +20,7 @@
     id="map" >
   </svg>
 
+  <div class="tooltip"></div>
   <script src="https://d3js.org/d3.v4.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
   <script src="./scripts/bar.js"></script>

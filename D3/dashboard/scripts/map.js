@@ -46,7 +46,9 @@ function updateMap(year, unit, yearData, geoData) {
     .enter()
     .append("path")
       .classed("country", true)
-      .attr("d", path);
+      .attr("d", path)
+      .on("mousemove touchmove", showTooltip)
+      .on("mouseout touchend", hideTooltip);
 
   var maxEmissions = d3.max(yearData, d => d[unit]);
 
@@ -65,5 +67,5 @@ function updateMap(year, unit, yearData, geoData) {
     });
 
   d3.select(".title")
-      .text(`Carbon dioxide emissions${unit === "perCapita" ? " per capita" : ""}, ${year}`);
+      .text(`Carbon dioxide ${unit.toLowerCase()}, ${year}`);
 }
