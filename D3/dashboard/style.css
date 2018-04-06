@@ -1,7 +1,6 @@
 svg,
 input {
-  margin: 0 auto;
-  display: block;
+  margin: 0;
 }
 
 .tooltip {
@@ -29,7 +28,7 @@ input {
   margin-left: -4px;
 }
 
-path {
+#map path {
   stroke: #ccc;
   stroke-width: 0.25px;
 }
