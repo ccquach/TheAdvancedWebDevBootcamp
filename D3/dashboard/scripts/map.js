@@ -18,7 +18,7 @@ function updateMap(year, unit, yearData, geoData) {
     var countries = geoData.filter(d => d.id === row.countryCode);
     countries.forEach(country => country.properties = row);
   });
-
+  
   d3.select("#map")
       .selectAll(".country")
       .data(geoData);

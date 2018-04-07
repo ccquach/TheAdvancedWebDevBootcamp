@@ -39,7 +39,6 @@ d3.queue()
     unitInput
       .on("click", () => {
         graph(getInputValues()[0], d3.event.target.value);
-        // updateBars(d, emissionsData, getInputValues()[0], getInputValues()[1], yearRange);
       });
 
     // graphs setup
@@ -81,8 +80,7 @@ d3.queue()
               .classed("selected", true);
           }
           
-          var countryData = emissionsData.filter(e => e.countryCode === d.properties.countryCode);
-          
+          var countryData = emissionsData.filter(e => e.country === d.properties.country);
           updateBars(countryData, !selected, emissionsData, yearRange, geoData);
         });
     
@@ -91,13 +89,11 @@ d3.queue()
     
     function graph(year, unit) {
       var yearData = emissionsData.filter(d => d.year === year);
+      var geoData = topojson.feature(mapData, mapData.objects.countries).features;
 
       countryNames.forEach(row => {
         var countries = geoData.filter(d => d.id === row.key);
-        countries.forEach(country => {
-          country.properties.country = row.value;
-          // country.properties.year = year;
-        });
+        countries.forEach(country => country.properties.country = row.value);
       });
       updateMap(year, unit, yearData, geoData);
 
