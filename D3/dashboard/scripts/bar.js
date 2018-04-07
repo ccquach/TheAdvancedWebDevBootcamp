@@ -53,27 +53,31 @@ function drawBars(yearRange) {
       .style("font-size", "1.5em");
 }
 
-function updateBars(d, selected, emissionsData, year, unit, yearRange, geoData) {
+function updateBars(data, selected, emissionsData, yearRange, geoData) {
+  var year = getInputValues()[0];
+  var unit = getInputValues()[1];
   var barPadding = 0.25;
   var numBars = yearRange[1] - yearRange[0] + 1;
   var barWidth = (width - 2 * padding) / numBars - barPadding;
-  var country = d.properties.country;
-  var countryData = emissionsData.filter(d => d.country === country).sort((a, b) => d3.ascending(a.year, b.year));
-
+  var country = data[0].country;
+  var countryData = data.sort((a, b) => d3.ascending(a.year, b.year));
+  
   var t =
     d3.transition()
       .duration(750)
       .ease(d3.easeBounceOut);
 
   if (!selected) {
-    var countryData = emissionsData.filter(d => d.country === country).sort((a, b) => d3.descending(a.year, b.year));
-    
-    d3.selectAll("rect")
+    var countryData = data.sort((a, b) => d3.descending(a.year, b.year));
+
+    d3.select("#bar")
+      .selectAll("rect")
       .data(countryData, d => d.year)
       .transition(t)
       .delay((d, i) => i * 100)
       .attr("y", height / 2 - padding / 2)
-      .attr("height", 0);
+      .attr("height", 0)
+      .remove();
 
     d3.select(".barTitle")
         .text("Click on a country to see annual trends.");
@@ -114,16 +118,15 @@ function updateBars(d, selected, emissionsData, year, unit, yearRange, geoData) 
   barUpdate
     .enter()
     .append("rect")
-      .attr("y", height / 2 - padding / 2)
       .attr("x", d => xScale(d.year) - 10)
-      .attr("width", barWidth)
+      .attr("y", height / 2 - padding / 2)
       .attr("height", 0)
     .merge(barUpdate)
+      .attr("fill", d => d.year === year ? "#009973" : "#00cc99")
       .transition(t)
       .delay((d, i) => i * 100)
+      .attr("width", barWidth)
       .attr("height", d => height / 2 - padding - yScale(d[unit]))
       .attr("y", d => yScale(d[unit]) + padding / 2)
-      .attr("fill", d => {
-        return d.year === year ? "#009973" : "#00cc99";
-      })
+      .attr("x", d => xScale(d.year) - 10);
 }

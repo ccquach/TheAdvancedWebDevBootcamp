@@ -63,6 +63,7 @@ d3.queue()
       .enter()
       .append("path")
         .classed("country", true)
+        .attr("id", d => d.id)
         .attr("d", path)
         .on("mousemove touchmove", showTooltip)
         .on("mouseout touchend", hideTooltip)
@@ -72,17 +73,17 @@ d3.queue()
             d3.select(this)
                 .classed("selected");
           
-          if (selected) {
-            d3.select(this)
+          d3.selectAll(".country")
               .classed("selected", false);
-          } else {
-            d3.selectAll(".country")
-              .classed("selected", false);
+
+          if (!selected) {
             d3.select(this)
               .classed("selected", true);
-          }       
-
-          updateBars(d, !selected, emissionsData, getInputValues()[0], getInputValues()[1], yearRange, geoData);
+          }
+          
+          var countryData = emissionsData.filter(e => e.countryCode === d.properties.countryCode);
+          
+          updateBars(countryData, !selected, emissionsData, yearRange, geoData);
         });
     
     // initial graphs
@@ -95,11 +96,16 @@ d3.queue()
         var countries = geoData.filter(d => d.id === row.key);
         countries.forEach(country => {
           country.properties.country = row.value;
-          country.properties.year = year;
+          // country.properties.year = year;
         });
       });
-      
       updateMap(year, unit, yearData, geoData);
+
+      var selectedCountry = d3.select(".selected");
+      if (selectedCountry.node()) {
+        var countryData = emissionsData.filter(d => d.countryCode === selectedCountry.attr("id"));
+        updateBars(countryData, true, emissionsData, yearRange, geoData);
+      }        
     }
   });
 
@@ -124,7 +130,7 @@ function showTooltip(d) {
       return `
         <p>Country: ${d.properties.country}</p>
         <p>${unit}: ${dataStr}</p>
-        <p>Year: ${d.properties.year}</p>
+        <p>Year: ${getInputValues()[0]}</p>
       `
     });
 }
