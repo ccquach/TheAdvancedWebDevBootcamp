@@ -32,3 +32,8 @@ input {
   stroke: #ccc;
   stroke-width: 0.25px;
 }
+
+#map .selected {
+  stroke: #1f4060;
+  stroke-width: 2px;
+}

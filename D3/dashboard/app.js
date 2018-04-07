@@ -37,7 +37,10 @@ d3.queue()
       .on("input", () => graph(+d3.event.target.value, getInputValues()[1]));
 
     unitInput
-      .on("click", () => graph(getInputValues()[0], d3.event.target.value));
+      .on("click", () => {
+        graph(getInputValues()[0], d3.event.target.value);
+        // updateBars(d, emissionsData, getInputValues()[0], getInputValues()[1], yearRange);
+      });
 
     // graphs setup
     drawBars(yearRange);
@@ -63,7 +66,24 @@ d3.queue()
         .attr("d", path)
         .on("mousemove touchmove", showTooltip)
         .on("mouseout touchend", hideTooltip)
-        .on("click", d => updateBars(d, emissionsData, getInputValues()[0], getInputValues()[1], yearRange));
+        .on("click", function(d) {
+          // outline selected country
+          var selected =
+            d3.select(this)
+                .classed("selected");
+          
+          if (selected) {
+            d3.select(this)
+              .classed("selected", false);
+          } else {
+            d3.selectAll(".country")
+              .classed("selected", false);
+            d3.select(this)
+              .classed("selected", true);
+          }       
+
+          updateBars(d, !selected, emissionsData, getInputValues()[0], getInputValues()[1], yearRange, geoData);
+        });
     
     // initial graphs
     graph(yearRange[0], unitInput.property("value"));

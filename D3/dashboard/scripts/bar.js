@@ -53,12 +53,33 @@ function drawBars(yearRange) {
       .style("font-size", "1.5em");
 }
 
-function updateBars(d, emissionsData, year, unit, yearRange) {
+function updateBars(d, selected, emissionsData, year, unit, yearRange, geoData) {
   var barPadding = 0.25;
   var numBars = yearRange[1] - yearRange[0] + 1;
   var barWidth = (width - 2 * padding) / numBars - barPadding;
   var country = d.properties.country;
   var countryData = emissionsData.filter(d => d.country === country).sort((a, b) => d3.ascending(a.year, b.year));
+
+  var t =
+    d3.transition()
+      .duration(750)
+      .ease(d3.easeBounceOut);
+
+  if (!selected) {
+    var countryData = emissionsData.filter(d => d.country === country).sort((a, b) => d3.descending(a.year, b.year));
+    
+    d3.selectAll("rect")
+      .data(countryData, d => d.year)
+      .transition(t)
+      .delay((d, i) => i * 100)
+      .attr("y", height / 2 - padding / 2)
+      .attr("height", 0);
+
+    d3.select(".barTitle")
+        .text("Click on a country to see annual trends.");
+        
+    return;
+  }
 
   var xScale =
     d3.scaleLinear()
@@ -98,10 +119,8 @@ function updateBars(d, emissionsData, year, unit, yearRange) {
       .attr("width", barWidth)
       .attr("height", 0)
     .merge(barUpdate)
-      .transition()
-      .duration(750)
+      .transition(t)
       .delay((d, i) => i * 100)
-      .ease(d3.easeBounceOut)
       .attr("height", d => height / 2 - padding - yScale(d[unit]))
       .attr("y", d => yScale(d[unit]) + padding / 2)
       .attr("fill", d => {
