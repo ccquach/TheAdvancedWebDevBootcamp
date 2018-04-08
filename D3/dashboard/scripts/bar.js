@@ -134,7 +134,7 @@ function updateBars(data, selected, yearRange, geoData) {
         })
         .attr("y", d => {
           var data = d[unit];
-          return data ? yScale(d[unit]) + padding / 2 : 0;
+          return data ? yScale(d[unit]) + padding / 2 : height / 2 - padding / 2;
         })
         .attr("x", d => xScale(d.year) - 10);
 }
