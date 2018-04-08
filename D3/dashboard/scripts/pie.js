@@ -1,0 +1,72 @@
+function drawPie() {
+  var pieSelection =
+    d3.select("#pie")
+        .attr("width", width)
+        .attr("height", height / 2);
+
+  // center pie chart
+  pieSelection
+    .append("g")
+      .attr("transform", `translate(${width / 2}, ${height / 4})`)
+      .classed("chart", true);
+
+  // title
+  pieSelection
+    .append("text")
+      .classed("pieTitle", true)
+      .attr("x", width / 2)
+      .attr("y", padding / 4)
+      .attr("text-anchor", "middle")
+      .style("font-size", "1.5em");
+}
+
+function updatePie(year, continents, data) {
+  // filter out countries with no data
+  var yearData = data.reduce((acc, next) => {
+    if (next.Emissions) acc.push(next);
+    return acc;
+  }, []);
+  
+  var colorScale =
+    d3.scaleOrdinal()
+      .domain(continents)
+      .range(d3.schemeDark2);
+
+  var arcs =
+    d3.pie()
+      .value(d => d.Emissions)
+      .sort((a, b) => {
+        if (a.continent < b.continent) return -1;
+        else if (a.continent > b.continent) return 1;
+        else return a.Emissions - b.Emissions;
+      })
+      (yearData);
+
+  var path =
+    d3.arc()
+      .outerRadius(width / 6 - 10)
+      .innerRadius(0)
+      .padAngle(0);
+
+  var pieUpdate =
+    d3.select(".chart")
+      .selectAll(".arc")
+      .data(arcs);
+
+  pieUpdate
+    .exit()
+    .remove();
+  
+  pieUpdate
+    .enter()
+    .append("path")
+      .classed("arc", true)
+    .merge(pieUpdate)
+      .attr("fill", d => colorScale(d.data.continent))
+      .attr("stroke", "white")
+      .attr("stroke-width", "0.5px")
+      .attr("d", path);
+  
+  d3.select(".pieTitle")
+      .text(`Total emissions by continent and region, ${year}`);
+}

@@ -24,6 +24,13 @@ d3.queue()
     var allData = formatData(emissionsData);
     var yearRange = d3.extent(allData, d => d.year);
     var geoData = topojson.feature(mapData, mapData.objects.countries).features;
+
+    // get continents for pie chart color scale
+    var continents = [];
+    for (var i = 0; i < allData.length; i++) {
+      var continent = allData[i].continent;
+      if (!continents.includes(continent)) continents.push(continent);
+    }
     
     yearInput
       .property("min", yearRange[0])
@@ -32,20 +39,20 @@ d3.queue()
       .on("input", () => graph(+d3.event.target.value, getInputValues()[1]));
 
     unitInput
-      .on("click", () => {
-        graph(getInputValues()[0], d3.event.target.value);
-      });
+      .on("click", () => graph(getInputValues()[0], d3.event.target.value));
 
     // initial graphs
     drawBars(yearRange);
     drawMap(yearRange, allData, geoData);
+    drawPie(allData)
     graph(yearRange[0], unitInput.property("value"));
-    
+
     function graph(year, unit) {
       var yearData = allData.filter(d => d.year === year);
       var geoData = topojson.feature(mapData, mapData.objects.countries).features;
 
       updateMap(year, unit, yearData, geoData);
+      updatePie(year, continents, yearData);
 
       var selectedCountry = d3.select(".selected");
       if (selectedCountry.node()) {
