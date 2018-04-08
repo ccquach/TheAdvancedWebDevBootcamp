@@ -27,6 +27,9 @@ function updatePie(year, continents, data) {
     return acc;
   }, []);
   
+  // get total emissions for the year
+  var total = yearData.reduce((acc, next) => acc += +next.Emissions, 0);
+  
   var colorScale =
     d3.scaleOrdinal()
       .domain(continents)
@@ -65,7 +68,9 @@ function updatePie(year, continents, data) {
       .attr("fill", d => colorScale(d.data.continent))
       .attr("stroke", "white")
       .attr("stroke-width", "0.5px")
-      .attr("d", path);
+      .attr("d", path)
+      .on("mousemove touchmove", d => showTooltip(d.data, d.data.Emissions / total))
+      .on("mouseout touchend", hideTooltip);
   
   d3.select(".pieTitle")
       .text(`Total emissions by continent and region, ${year}`);

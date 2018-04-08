@@ -68,7 +68,7 @@ function getInputValues() {
   return [year, unit];
 }
 
-function showTooltip(d) {
+function showTooltip(d, pct) {
   var unit = getInputValues()[1];
   var tooltip = d3.select(".tooltip");
   tooltip
@@ -76,15 +76,18 @@ function showTooltip(d) {
     .style("left", (d3.event.pageX - tooltip.node().offsetWidth / 2) + "px")
     .style("top", (d3.event.pageY - tooltip.node().offsetHeight - 10) + "px")
     .html(() => {
-      var data = d[unit] ? d[unit] : d.properties[unit];
+      var data = d[unit];
       var dataStr = "";
       if (data) dataStr = `${data.toLocaleString()} ${unit === "Emissions" ? "thousand metric tons" : "metric tons per capita"}`;
       else dataStr = "Data Not Available";
-      return `
-        <p>Country: ${d.country ? d.country : d.properties.country}</p>
+
+      var tooltipStr = `
+        <p>Country: ${d.country}</p>
         <p>${unit}: ${dataStr}</p>
-        <p>Year: ${d.year ? d.year : d.properties.year}</p>
+        <p>Year: ${d.year}</p>
       `
+      if (pct) tooltipStr += `Percentage of total: ${(pct * 100).toFixed(2)}%`;
+      return tooltipStr;
     });
 }
 
