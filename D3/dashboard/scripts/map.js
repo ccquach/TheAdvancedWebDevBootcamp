@@ -29,7 +29,7 @@ function drawMap(yearRange, allData, geoData) {
       .classed("country", true)
       .attr("id", d => d.id)
       .attr("d", path)
-      .on("mousemove touchmove", showTooltip)
+      .on("mousemove touchmove", d => showTooltip(d.properties))
       .on("mouseout touchend", hideTooltip)
       .on("click", function(d) {
         // outline selected country

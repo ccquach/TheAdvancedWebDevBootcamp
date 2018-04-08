@@ -123,7 +123,7 @@ function updateBars(data, selected, yearRange, geoData) {
       .attr("height", 0)
     .merge(barUpdate)
       .attr("fill", d => d.year === year ? "#009973" : "#00cc99")
-      .on("mousemove touchmove", showTooltip)
+      .on("mousemove touchmove", d => showTooltip(d))
       .on("mouseout touchend", hideTooltip)
       .transition(t)
       .delay((d, i) => i * 100)
