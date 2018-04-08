@@ -109,14 +109,14 @@ function showTooltip(d) {
     .style("left", (d3.event.pageX - tooltip.node().offsetWidth / 2) + "px")
     .style("top", (d3.event.pageY - tooltip.node().offsetHeight - 10) + "px")
     .html(() => {
-      var data = d.properties[unit];
+      var data = d[unit] ? d[unit] : d.properties[unit];
       var dataStr = "";
       if (data) dataStr = `${data.toLocaleString()} ${unit === "Emissions" ? "thousand metric tons" : "metric tons per capita"}`;
       else dataStr = "Data Not Available";
       return `
-        <p>Country: ${d.properties.country}</p>
+        <p>Country: ${d.country ? d.country : d.properties.country}</p>
         <p>${unit}: ${dataStr}</p>
-        <p>Year: ${getInputValues()[0]}</p>
+        <p>Year: ${d.year ? d.year : d.properties.year}</p>
       `
     });
 }
