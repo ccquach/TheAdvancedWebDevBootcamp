@@ -53,7 +53,7 @@ function drawBars(yearRange) {
       .style("font-size", "1.5em");
 }
 
-function updateBars(data, selected, emissionsData, yearRange, geoData) {
+function updateBars(data, selected, yearRange, geoData) {
   var year = getInputValues()[0];
   var unit = getInputValues()[1];
   var barPadding = 0.25;
@@ -123,10 +123,18 @@ function updateBars(data, selected, emissionsData, yearRange, geoData) {
       .attr("height", 0)
     .merge(barUpdate)
       .attr("fill", d => d.year === year ? "#009973" : "#00cc99")
+      .on("mousemove touchmove", showTooltip)
+      .on("mouseout touchend", hideTooltip)
       .transition(t)
       .delay((d, i) => i * 100)
-      .attr("width", barWidth)
-      .attr("height", d => height / 2 - padding - yScale(d[unit]))
-      .attr("y", d => yScale(d[unit]) + padding / 2)
-      .attr("x", d => xScale(d.year) - 10);
+        .attr("width", barWidth)
+        .attr("height", d => {
+          var data = d[unit];
+          return data ? height / 2 - padding - yScale(d[unit]) : 0;
+        })
+        .attr("y", d => {
+          var data = d[unit];
+          return data ? yScale(d[unit]) + padding / 2 : 0;
+        })
+        .attr("x", d => xScale(d.year) - 10);
 }

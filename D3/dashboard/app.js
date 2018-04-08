@@ -20,15 +20,9 @@ d3.queue()
   })
   .await(function(error, mapData, emissionsData) {
     if (error) throw error;
-
-    // get country names
-    var countryNames = 
-      d3.nest()
-        .key(d => d.countryCode)
-        .rollup(v => v[0].country)
-        .entries(emissionsData);
     
-    var yearRange = d3.extent(emissionsData, d => d.year);
+    var allData = formatData(emissionsData);
+    var yearRange = d3.extent(allData, d => d.year);
     
     yearInput
       .property("min", yearRange[0])
@@ -80,27 +74,23 @@ d3.queue()
               .classed("selected", true);
           }
           
-          var countryData = emissionsData.filter(e => e.country === d.properties.country);
-          updateBars(countryData, !selected, emissionsData, yearRange, geoData);
+          var countryData = allData.filter(e => e.country === d.properties.country);
+          updateBars(countryData, !selected, yearRange, geoData);
         });
     
     // initial graphs
     graph(yearRange[0], unitInput.property("value"));
     
     function graph(year, unit) {
-      var yearData = emissionsData.filter(d => d.year === year);
+      var yearData = allData.filter(d => d.year === year);
       var geoData = topojson.feature(mapData, mapData.objects.countries).features;
 
-      countryNames.forEach(row => {
-        var countries = geoData.filter(d => d.id === row.key);
-        countries.forEach(country => country.properties.country = row.value);
-      });
       updateMap(year, unit, yearData, geoData);
 
       var selectedCountry = d3.select(".selected");
       if (selectedCountry.node()) {
-        var countryData = emissionsData.filter(d => d.countryCode === selectedCountry.attr("id"));
-        updateBars(countryData, true, emissionsData, yearRange, geoData);
+        var countryData = allData.filter(d => d.countryCode === selectedCountry.attr("id"));
+        updateBars(countryData, true, yearRange, geoData);
       }        
     }
   });
@@ -134,4 +124,51 @@ function showTooltip(d) {
 function hideTooltip() {
   d3.select(".tooltip")
       .style("opacity", 0);
+}
+
+function formatData(data) {
+  // get years
+  var yearNest =
+    d3.nest()
+      .key(d => d.year)
+      .entries(data);
+
+  var years = yearNest.reduce((acc, next) => {
+    acc.push(+next.key);
+    return acc;
+  }, []);
+
+  // get countries
+  var countryNest = 
+      d3.nest()
+        .key(d => d.country)
+        .entries(data);
+
+  // loop thru each country
+  for (country in countryNest) {
+    var countryData = data.filter(d => d.country === countryNest[country].key);
+    // add object to array for missing years of a country
+    if (countryData.length !== years.length) {
+      // create empty country object
+      var countryObj = Object.assign({}, countryData[0]);
+      delete countryObj["Emissions"];
+      delete countryObj["Emissions Per Capita"];
+      delete countryObj.year;
+      
+      // get years country already has
+      var countryYears = countryData.reduce((acc, next) => {
+        acc.push(+next.year);
+        return acc;
+      }, []);
+
+      for (var i = 0; i < years.length; i++) {
+        // create new object for missing country year
+        if (!countryYears.includes(years[i])) {
+          var newCountryObj = Object.assign({ year: years[i] }, countryObj);
+          data.push(newCountryObj);
+        }
+      }
+    }
+  }
+  return data;
 }

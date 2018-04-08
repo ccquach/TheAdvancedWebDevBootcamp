@@ -14,6 +14,7 @@ function drawMap() {
 }
 
 function updateMap(year, unit, yearData, geoData) {
+  // join year data to geodata country object properties
   yearData.forEach(row => {
     var countries = geoData.filter(d => d.id === row.countryCode);
     countries.forEach(country => country.properties = row);
