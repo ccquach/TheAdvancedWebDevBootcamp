@@ -23,6 +23,7 @@ d3.queue()
     
     var allData = formatData(emissionsData);
     var yearRange = d3.extent(allData, d => d.year);
+    var geoData = topojson.feature(mapData, mapData.objects.countries).features;
     
     yearInput
       .property("min", yearRange[0])
@@ -35,50 +36,9 @@ d3.queue()
         graph(getInputValues()[0], d3.event.target.value);
       });
 
-    // graphs setup
-    drawBars(yearRange);
-    drawMap();
-
-    var geoData = topojson.feature(mapData, mapData.objects.countries).features;
-
-    var projection =
-      d3.geoMercator()
-        .scale(100)
-        .translate([width / 2, height / 1.4]);
-
-    var path =
-      d3.geoPath()
-        .projection(projection);
-    
-    d3.select("#map")
-      .selectAll(".country")
-      .data(geoData)
-      .enter()
-      .append("path")
-        .classed("country", true)
-        .attr("id", d => d.id)
-        .attr("d", path)
-        .on("mousemove touchmove", showTooltip)
-        .on("mouseout touchend", hideTooltip)
-        .on("click", function(d) {
-          // outline selected country
-          var selected =
-            d3.select(this)
-                .classed("selected");
-          
-          d3.selectAll(".country")
-              .classed("selected", false);
-
-          if (!selected) {
-            d3.select(this)
-              .classed("selected", true);
-          }
-          
-          var countryData = allData.filter(e => e.country === d.properties.country);
-          updateBars(countryData, !selected, yearRange, geoData);
-        });
-    
     // initial graphs
+    drawBars(yearRange);
+    drawMap(yearRange, allData, geoData);
     graph(yearRange[0], unitInput.property("value"));
     
     function graph(year, unit) {

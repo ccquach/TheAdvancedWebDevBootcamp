@@ -1,4 +1,4 @@
-function drawMap() {
+function drawMap(yearRange, allData, geoData) {
   var mapSelection =
     d3.select("#map")
         .attr("width", width)
@@ -11,6 +11,43 @@ function drawMap() {
       .attr("y", "1.5em")
       .attr("text-anchor", "middle")
       .style("font-size", "1.5em");
+
+  var projection =
+    d3.geoMercator()
+      .scale(100)
+      .translate([width / 2, height / 1.4]);
+
+  var path =
+    d3.geoPath()
+      .projection(projection);
+  
+  d3.select("#map")
+    .selectAll(".country")
+    .data(geoData)
+    .enter()
+    .append("path")
+      .classed("country", true)
+      .attr("id", d => d.id)
+      .attr("d", path)
+      .on("mousemove touchmove", showTooltip)
+      .on("mouseout touchend", hideTooltip)
+      .on("click", function(d) {
+        // outline selected country
+        var selected =
+          d3.select(this)
+              .classed("selected");
+        
+        d3.selectAll(".country")
+            .classed("selected", false);
+
+        if (!selected) {
+          d3.select(this)
+            .classed("selected", true);
+        }
+        
+        var countryData = allData.filter(e => e.country === d.properties.country);
+        updateBars(countryData, !selected, yearRange, geoData);
+      });
 }
 
 function updateMap(year, unit, yearData, geoData) {
