@@ -3,34 +3,51 @@
 <head>
   <meta charset="utf-8" />
   <title>D3 Final Project</title>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <input type="range" step="1">
-  <div>
-    <input type="radio" name="units" value="Emissions" checked>
-    <label for="Emissions">Emissions</label>
-    <input type="radio" name="units" value="Emissions Per Capita">
-    <label for="Emissions Per Capita">Emissions Per Capita</label>
+  <header>
+    <h2>CO<sub>2</sub> Dashboard</h2>
+    <div>
+      <span>Explore CO<sub>2</sub> emissions by year. </span>
+      <span class="currentYear"></span>
+      <input type="range" step="1">
+      </div>
+    <div>
+      <span>Choose between total emissions or emissions per capita.</span>
+      <input type="radio" name="units" value="Emissions" checked>
+      <label for="Emissions">Emissions</label>
+      <input type="radio" name="units" value="Emissions Per Capita">
+      <label for="Emissions Per Capita">Emissions Per Capita</label>
+    </div>
+    <p>Click on a country to see trends by year.</p>
+  </header>
+  
+  <div class="container">
+    <div class="group">
+      <svg 
+        version="1.1"
+        baseProfile="full"
+        xmlns="http://www.w3.org/2000/svg"
+        id="map" >
+      </svg>
+    </div>
+    <div class="group">
+      <svg 
+        version="1.1"
+        baseProfile="full"
+        xmlns="http://www.w3.org/2000/svg"
+        id="pie" >
+      </svg>
+      <svg 
+        version="1.1"
+        baseProfile="full"
+        xmlns="http://www.w3.org/2000/svg"
+        id="bar" >
+      </svg>
+    </div>
   </div>
-  <svg 
-    version="1.1"
-    baseProfile="full"
-    xmlns="http://www.w3.org/2000/svg"
-    id="map" >
-  </svg>
-  <svg 
-    version="1.1"
-    baseProfile="full"
-    xmlns="http://www.w3.org/2000/svg"
-    id="pie" >
-  </svg>
-  <svg 
-    version="1.1"
-    baseProfile="full"
-    xmlns="http://www.w3.org/2000/svg"
-    id="bar" >
-  </svg>
 
   <div class="tooltip"></div>
   <script src="https://d3js.org/d3.v4.js"></script>
