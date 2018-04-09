@@ -15,7 +15,7 @@ function drawPie() {
     .append("text")
       .classed("pieTitle", true)
       .attr("x", width / 2)
-      .attr("y", padding / 4)
+      .attr("y", padding / 2)
       .attr("text-anchor", "middle")
       .style("font-size", "1.5em");
 }
@@ -47,7 +47,7 @@ function updatePie(year, continents, data) {
 
   var path =
     d3.arc()
-      .outerRadius(width / 6 - 10)
+      .outerRadius(width / 8)
       .innerRadius(0)
       .padAngle(0);
 

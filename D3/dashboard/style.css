@@ -6,7 +6,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-width: 1400px;
+  min-width: 1600px;
   font-family: "Source Sans Pro", "sans-serif";
   background-color: #f2f2f2;
 }

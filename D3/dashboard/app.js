@@ -1,5 +1,5 @@
-var width = 700;
-var height = 600;
+var width = 800;
+var height = 700;
 var padding = 80;
 
 var yearInput = d3.select('input[type="range"]');
