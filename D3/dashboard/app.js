@@ -42,12 +42,16 @@ d3.queue()
       .on("click", () => graph(getInputValues()[0], d3.event.target.value));
 
     // initial graphs
-    drawBars(yearRange);
+    drawBars(yearRange, unitInput.property("value"));
     drawMap(yearRange, allData, geoData);
     drawPie(allData)
     graph(yearRange[0], unitInput.property("value"));
 
     function graph(year, unit) {
+      // update header current year
+      d3.select(".currentYear")
+          .text(`Current Year: ${year}`);
+
       var yearData = allData.filter(d => d.year === year);
       var geoData = topojson.feature(mapData, mapData.objects.countries).features;
 
@@ -58,7 +62,7 @@ d3.queue()
       if (selectedCountry.node()) {
         var countryData = allData.filter(d => d.countryCode === selectedCountry.attr("id"));
         updateBars(countryData, true, yearRange, geoData);
-      }        
+      }
     }
   });
 

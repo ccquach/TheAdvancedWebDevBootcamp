@@ -1,4 +1,4 @@
-function drawBars(yearRange) {
+function drawBars(yearRange, unit) {
   var barSelection =
     d3.select("#bar")
         .attr("width", width)
@@ -37,6 +37,7 @@ function drawBars(yearRange) {
 
   barSelection
     .append("text")
+      .text(`CO2 emissions, ${unit === "Emissions" ? "thousand metric tons" : "metric tons per capita"}`)
       .classed("yLabel", true)
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 4)
