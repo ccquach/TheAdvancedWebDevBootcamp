@@ -1,4 +1,4 @@
-function drawMap(yearRange, allData, geoData) {
+function drawMap(year, unit, geoData) {
   var mapSelection =
     d3.select("#map")
         .attr("width", width)
@@ -30,29 +30,10 @@ function drawMap(yearRange, allData, geoData) {
     .append("path")
       .classed("country", true)
       .attr("id", d => d.id)
-      .attr("d", path)
-      .on("mousemove touchmove", d => showTooltip(d.properties))
-      .on("mouseout touchend", hideTooltip)
-      .on("click", function(d) {
-        // outline selected country
-        var selected =
-          d3.select(this)
-              .classed("selected");
-        
-        d3.selectAll(".country")
-            .classed("selected", false);
-
-        if (!selected) {
-          d3.select(this)
-            .classed("selected", true);
-        }
-        // update bar graph with selected country's data
-        var countryData = allData.filter(e => e.country === d.properties.country);
-        updateBars(countryData, !selected, yearRange);
-      });
+      .attr("d", path);
 }
 
-function updateMap(year, unit, yearData, geoData) {
+function updateMap(year, unit, yearRange, yearData, geoData, allData) {
   // join year data to geodata country object properties
   yearData.forEach(row => {
     var countries = geoData.filter(d => d.id === row.countryCode);
@@ -69,7 +50,26 @@ function updateMap(year, unit, yearData, geoData) {
   // update path element data bindings
   d3.select("#map")
       .selectAll(".country")
-      .data(geoData);
+      .data(geoData)
+      .on("mousemove touchmove", d => showTooltip(d.properties, unit))
+      .on("mouseout touchend", hideTooltip)
+      .on("click", function(d) {
+        // outline selected country
+        var selected =
+          d3.select(this)
+              .classed("selected");
+        
+        d3.selectAll(".country")
+            .classed("selected", false);
+
+        if (!selected) {
+          d3.select(this)
+            .classed("selected", true);
+        }
+        // update bar graph with selected country's data
+        var countryData = allData.filter(e => e.country === d.properties.country);
+        updateBars(year, unit, countryData, !selected, yearRange);
+      });
 
   // fill scale
   var maxEmissions = d3.max(yearData, d => d[unit]);

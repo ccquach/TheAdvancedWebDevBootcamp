@@ -72,7 +72,7 @@ function updatePie(year, continents, data) {
       .attr("stroke", "white")
       .attr("stroke-width", "0.5px")
       .attr("d", path)
-      .on("mousemove touchmove", d => showTooltip(d.data, d.data.Emissions / total))
+      .on("mousemove touchmove", d => showTooltip(d.data, "Emissions", d.data.Emissions / total))
       .on("mouseout touchend", hideTooltip);
   
   // title

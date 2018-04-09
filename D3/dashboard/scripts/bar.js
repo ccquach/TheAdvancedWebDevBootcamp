@@ -51,9 +51,7 @@ function drawBars(yearRange, unit) {
       .style("font-size", "1.5em");
 }
 
-function updateBars(data, selected, yearRange) {
-  var year = getInputValues()[0];
-  var unit = getInputValues()[1];
+function updateBars(year, unit, data, selected, yearRange) {
   var barPadding = 2;
   var numBars = yearRange[1] - yearRange[0] + 1;
   var barWidth = (width - padding * 1.5) / numBars - barPadding;
@@ -137,7 +135,7 @@ function updateBars(data, selected, yearRange) {
       .attr("height", 0)
     .merge(barUpdate)
       .attr("fill", d => d.year === year ? "#009973" : "#00cc99")
-      .on("mousemove touchmove", d => showTooltip(d))
+      .on("mousemove touchmove", d => showTooltip(d, unit))
       .on("mouseout touchend", hideTooltip)
       .transition(t)
       .delay((d, i) => i * 100)

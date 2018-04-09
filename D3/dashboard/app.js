@@ -2,9 +2,6 @@ var width = 800;
 var height = 700;
 var padding = 80;
 
-var yearInput = d3.select('input[type="range"]');
-var unitInput = d3.selectAll('input[type="radio"]');
-
 d3.queue()
   .defer(d3.json, "//unpkg.com/world-atlas@1.1.4/world/50m.json")
   .defer(d3.csv, "./data/all_data.csv", function(row) {
@@ -23,8 +20,10 @@ d3.queue()
     
     var allData = formatData(emissionsData);
     var yearRange = d3.extent(allData, d => d.year);
+    var currentYear = yearRange[0];
+    var currentUnit = d3.select('input[name="unit"]:checked').attr("value");
     var geoData = topojson.feature(mapData, mapData.objects.countries).features;
-
+    
     // get continents for pie chart color scale
     var continents = [];
     for (var i = 0; i < allData.length; i++) {
@@ -33,20 +32,26 @@ d3.queue()
     }
     
     // input setup
-    yearInput
+    d3.select("#year")
       .property("min", yearRange[0])
       .property("max", yearRange[1])
       .property("value", yearRange[0])
-      .on("input", () => graph(+d3.event.target.value, getInputValues()[1]));
+      .on("input", () => {
+        currentYear = +d3.event.target.value;
+        graph(currentYear, currentUnit);
+      });
 
-    unitInput
-      .on("click", () => graph(getInputValues()[0], d3.event.target.value));
+    d3.selectAll('input[name="unit"]')
+      .on("change", () => {
+        currentUnit = d3.event.target.value;
+        graph(currentYear, currentUnit);
+      });
 
     // initial graphs
-    drawBars(yearRange, unitInput.property("value"));
-    drawMap(yearRange, allData, geoData);
+    drawBars(yearRange, currentUnit);
+    drawMap(currentYear, currentUnit, geoData);
     drawPie(allData)
-    graph(yearRange[0], unitInput.property("value"));
+    graph(yearRange[0], currentUnit);
 
     function graph(year, unit) {
       // update header current year
@@ -55,25 +60,18 @@ d3.queue()
       // get year data
       var yearData = allData.filter(d => d.year === year);
       // update charts
-      updateMap(year, unit, yearData, geoData);
+      updateMap(year, unit, yearRange, yearData, geoData, allData);
       updatePie(year, continents, yearData);
-
+      
       var selectedCountry = d3.select(".selected");
       if (selectedCountry.node()) {
         var countryData = allData.filter(d => d.countryCode === selectedCountry.attr("id"));
-        updateBars(countryData, true, yearRange);
+        updateBars(year, unit, countryData, true, yearRange);
       }
     }
   });
 
-function getInputValues() {
-  var year = +yearInput.property("value");
-  var unit = unitInput.nodes().filter(d => d.checked)[0].value;
-  return [year, unit];
-}
-
-function showTooltip(d, pct) {
-  var unit = getInputValues()[1];
+function showTooltip(d, unit, pct) {
   var tooltip = d3.select(".tooltip");
   tooltip
     .style("opacity", 1)
