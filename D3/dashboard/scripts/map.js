@@ -67,7 +67,7 @@ function updateMap(year, unit, yearRange, yearData, geoData, allData) {
             .classed("selected", true);
         }
         // update bar graph with selected country's data
-        var countryData = allData.filter(e => e.country === d.properties.country);
+        var countryData = selected ? [] : allData.filter(e => e.country === d.properties.country);
         updateBars(year, unit, countryData, !selected, yearRange);
       });
 

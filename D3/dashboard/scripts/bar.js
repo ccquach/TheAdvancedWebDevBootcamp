@@ -56,41 +56,12 @@ function updateBars(year, unit, data, selected, yearRange) {
   var numBars = yearRange[1] - yearRange[0] + 1;
   var barWidth = (width - padding * 1.5) / numBars - barPadding;
 
-  // replace data with array of year objects for country with no data so bars can be removed in descending order
-  if (data.length === 0) {
-    data = [];
-    for (var i = yearRange[0]; i <= yearRange[1]; i++) {
-      data.push({ year: i });
-    }
-    selected = false;
-  }
-
   var t =
     d3.transition()
       .duration(750)
       .ease(d3.easeBounceOut);
-  
-  // remove bars if country de-selected or country with no data selected
-  if (!selected) {
-    var countryData = data.sort((a, b) => d3.descending(a.year, b.year));
-    
-    d3.select("#bar")
-      .selectAll("rect")
-      .data(countryData, d => d.year)
-      .transition(t)
-      .delay((d, i) => i * 100)
-      .attr("y", height / 2 - padding / 2)
-      .attr("height", 0)
-      .remove();
-
-    d3.select(".bar-title")
-        .text("Click on a country to see annual trends.");
-        
-    return;
-  }
 
   // get country data
-  var country = data[0].country;
   var countryData = data.sort((a, b) => d3.ascending(a.year, b.year));
 
   // scales
@@ -114,8 +85,9 @@ function updateBars(year, unit, data, selected, yearRange) {
       .text(`CO2 emissions, ${unit === "Emissions" ? "thousand metric tons" : "metric tons per capita"}`);
   
   // title
+  var barTitle = countryData.length > 0 ? `CO2 Emissions, ${countryData[0].country}` : "Click on a country to see annual trends.";
   d3.select(".bar-title")
-      .text(`CO2 Emissions, ${country}`);
+      .text(barTitle);
 
   // update bars
   var barUpdate =
@@ -125,6 +97,10 @@ function updateBars(year, unit, data, selected, yearRange) {
       
   barUpdate
     .exit()
+    .transition(t)
+    .delay((d, i, nodes) => (nodes.length - i - 1) * 100)
+    .attr("y", height / 2 - padding / 2)
+    .attr("height", 0)
     .remove();
 
   barUpdate
