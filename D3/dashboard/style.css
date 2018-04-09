@@ -79,6 +79,10 @@ svg {
   stroke-width: 2px;
 }
 
+.tick text {
+  font-size: 1.5em;
+}
+
 @media all and (max-width: 920px) {
   body {
     min-width: 800px;

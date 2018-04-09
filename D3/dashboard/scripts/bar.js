@@ -7,12 +7,12 @@ function drawBars(yearRange, unit) {
   barSelection
     .append("g")
       .classed("x-axis", true)
-      .attr("transform", `translate(0, ${height / 2 - padding / 2})`);
+      .attr("transform", `translate(${padding / 2}, ${height / 2 - padding / 2})`);
 
   barSelection
     .append("g")
       .classed("y-axis", true)
-      .attr("transform", `translate(${padding - 10}, ${padding / 2})`);
+      .attr("transform", `translate(${padding * 1.5 - 10}, ${padding / 2})`);
 
   var xScale =
     d3.scaleLinear()
@@ -30,10 +30,7 @@ function drawBars(yearRange, unit) {
     );
 
   d3.select(".y-axis")
-    .call(
-      d3.axisLeft(yScale)
-        .ticks(0)
-    );
+      .call(d3.axisLeft(yScale).ticks(0));
 
   barSelection
     .append("text")
@@ -57,9 +54,9 @@ function drawBars(yearRange, unit) {
 function updateBars(data, selected, yearRange) {
   var year = getInputValues()[0];
   var unit = getInputValues()[1];
-  var barPadding = 0.25;
+  var barPadding = 2;
   var numBars = yearRange[1] - yearRange[0] + 1;
-  var barWidth = (width - 2 * padding) / numBars - barPadding;
+  var barWidth = (width - padding * 1.5) / numBars - barPadding;
 
   if (data.length === 0) {
     data = [];
@@ -98,16 +95,16 @@ function updateBars(data, selected, yearRange) {
   var xScale =
     d3.scaleLinear()
       .domain(yearRange)
-      .range([padding, width - padding]);
+      .range([padding * 1.5, width - padding / 2]);
 
   var yScale =
     d3.scaleLinear()
       .domain([0, d3.max(countryData, d => d[unit])])
       .range([height / 2 - padding, 0]);
-  
+
   d3.select(".y-axis")
-      .transition()
-      .duration(500)
+    .transition()
+    .duration(500)
       .call(d3.axisLeft(yScale));
 
   d3.select(".yLabel")
