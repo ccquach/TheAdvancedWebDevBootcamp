@@ -54,23 +54,29 @@ function drawBars(yearRange, unit) {
       .style("font-size", "1.5em");
 }
 
-function updateBars(data, selected, yearRange, geoData) {
+function updateBars(data, selected, yearRange) {
   var year = getInputValues()[0];
   var unit = getInputValues()[1];
   var barPadding = 0.25;
   var numBars = yearRange[1] - yearRange[0] + 1;
   var barWidth = (width - 2 * padding) / numBars - barPadding;
-  var country = data[0].country;
-  var countryData = data.sort((a, b) => d3.ascending(a.year, b.year));
-  
+
+  if (data.length === 0) {
+    data = [];
+    for (var i = yearRange[0]; i <= yearRange[1]; i++) {
+      data.push({ year: i });
+    }
+    selected = false;
+  }
+
   var t =
     d3.transition()
       .duration(750)
       .ease(d3.easeBounceOut);
-
+  
   if (!selected) {
     var countryData = data.sort((a, b) => d3.descending(a.year, b.year));
-
+    
     d3.select("#bar")
       .selectAll("rect")
       .data(countryData, d => d.year)
@@ -85,6 +91,9 @@ function updateBars(data, selected, yearRange, geoData) {
         
     return;
   }
+
+  var country = data[0].country;
+  var countryData = data.sort((a, b) => d3.ascending(a.year, b.year));
 
   var xScale =
     d3.scaleLinear()

@@ -46,7 +46,7 @@ function drawMap(yearRange, allData, geoData) {
         }
         
         var countryData = allData.filter(e => e.country === d.properties.country);
-        updateBars(countryData, !selected, yearRange, geoData);
+        updateBars(countryData, !selected, yearRange);
       });
 }
 
@@ -57,6 +57,13 @@ function updateMap(year, unit, yearData, geoData) {
     countries.forEach(country => country.properties = row);
   });
   
+  // add country and year data to geodata objects with empty properties
+  var emptyCountries = geoData.filter(d => Object.keys(d.properties).length === 0);
+  emptyCountries.forEach(country => country.properties = {
+    country: "",
+    year: year
+  });
+  
   d3.select("#map")
       .selectAll(".country")
       .data(geoData);
@@ -65,8 +72,9 @@ function updateMap(year, unit, yearData, geoData) {
 
   var fScale =
     d3.scaleLinear()
-      .domain([0, maxEmissions])
-      .range(["#ffcc00", "#990000"])
+      // .domain([0, maxEmissions])
+      .domain(d3.extent(yearData, d => d[unit]))
+      .range(["#ffcc00", "#4f0000"])
       .interpolate(d3.interpolateHsl);
 
   d3.selectAll(".country")

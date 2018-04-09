@@ -61,7 +61,7 @@ d3.queue()
       var selectedCountry = d3.select(".selected");
       if (selectedCountry.node()) {
         var countryData = allData.filter(d => d.countryCode === selectedCountry.attr("id"));
-        updateBars(countryData, true, yearRange, geoData);
+        updateBars(countryData, true, yearRange);
       }
     }
   });
