@@ -7,7 +7,7 @@ function drawMap(year, unit, geoData) {
   // title
   mapSelection
     .append("text")
-      .classed("title", true)
+      .classed("map-title", true)
       .attr("x", width / 2)
       .attr("y", "1.5em")
       .attr("text-anchor", "middle")
@@ -90,6 +90,6 @@ function updateMap(year, unit, yearRange, yearData, geoData, allData) {
     });
 
   // title
-  d3.select(".title")
+  d3.select(".map-title")
       .text(`Carbon dioxide ${unit.toLowerCase()}, ${year}`);
 }

@@ -34,7 +34,7 @@ function drawBars(yearRange, unit) {
   barSelection
     .append("text")
       .text(`CO2 emissions, ${unit === "Emissions" ? "thousand metric tons" : "metric tons per capita"}`)
-      .classed("yLabel", true)
+      .classed("y-label", true)
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 4)
       .attr("dy", padding / 4 - 9)
@@ -43,7 +43,7 @@ function drawBars(yearRange, unit) {
   // title
   barSelection
     .append("text")
-      .classed("barTitle", true)
+      .classed("bar-title", true)
       .text("Click on a country to see annual trends.")
       .attr("x", width / 2)
       .attr("y", padding / 4)
@@ -83,7 +83,7 @@ function updateBars(year, unit, data, selected, yearRange) {
       .attr("height", 0)
       .remove();
 
-    d3.select(".barTitle")
+    d3.select(".bar-title")
         .text("Click on a country to see annual trends.");
         
     return;
@@ -110,11 +110,11 @@ function updateBars(year, unit, data, selected, yearRange) {
     .duration(500)
       .call(d3.axisLeft(yScale));
 
-  d3.select(".yLabel")
+  d3.select(".y-label")
       .text(`CO2 emissions, ${unit === "Emissions" ? "thousand metric tons" : "metric tons per capita"}`);
   
   // title
-  d3.select(".barTitle")
+  d3.select(".bar-title")
       .text(`CO2 Emissions, ${country}`);
 
   // update bars

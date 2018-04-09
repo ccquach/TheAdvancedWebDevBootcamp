@@ -13,7 +13,7 @@ function drawPie() {
   // title
   pieSelection
     .append("text")
-      .classed("pieTitle", true)
+      .classed("pie-title", true)
       .attr("x", width / 2)
       .attr("y", padding / 2)
       .attr("text-anchor", "middle")
@@ -76,6 +76,6 @@ function updatePie(year, continents, data) {
       .on("mouseout touchend", hideTooltip);
   
   // title
-  d3.select(".pieTitle")
+  d3.select(".pie-title")
       .text(`Total emissions by continent and region, ${year}`);
 }
