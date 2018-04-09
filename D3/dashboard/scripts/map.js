@@ -4,6 +4,7 @@ function drawMap(yearRange, allData, geoData) {
         .attr("width", width)
         .attr("height", height);
 
+  // title
   mapSelection
     .append("text")
       .classed("title", true)
@@ -12,6 +13,7 @@ function drawMap(yearRange, allData, geoData) {
       .attr("text-anchor", "middle")
       .style("font-size", "1.5em");
 
+  // draw map
   var projection =
     d3.geoMercator()
       .scale(100)
@@ -44,7 +46,7 @@ function drawMap(yearRange, allData, geoData) {
           d3.select(this)
             .classed("selected", true);
         }
-        
+        // update bar graph with selected country's data
         var countryData = allData.filter(e => e.country === d.properties.country);
         updateBars(countryData, !selected, yearRange);
       });
@@ -64,15 +66,16 @@ function updateMap(year, unit, yearData, geoData) {
     year: year
   });
   
+  // update path element data bindings
   d3.select("#map")
       .selectAll(".country")
       .data(geoData);
 
+  // fill scale
   var maxEmissions = d3.max(yearData, d => d[unit]);
 
   var fScale =
     d3.scaleLinear()
-      // .domain([0, maxEmissions])
       .domain(d3.extent(yearData, d => d[unit]))
       .range(["#ffcc00", "#4f0000"])
       .interpolate(d3.interpolateHsl);
@@ -86,6 +89,7 @@ function updateMap(year, unit, yearData, geoData) {
       return data ? fScale(data) : "#ccc";
     });
 
+  // title
   d3.select(".title")
       .text(`Carbon dioxide ${unit.toLowerCase()}, ${year}`);
 }

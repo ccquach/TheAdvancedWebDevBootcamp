@@ -32,6 +32,7 @@ d3.queue()
       if (!continents.includes(continent)) continents.push(continent);
     }
     
+    // input setup
     yearInput
       .property("min", yearRange[0])
       .property("max", yearRange[1])
@@ -49,12 +50,11 @@ d3.queue()
 
     function graph(year, unit) {
       // update header current year
-      d3.select(".currentYear")
+      d3.select(".current-year")
           .text(`Current Year: ${year}`);
-
+      // get year data
       var yearData = allData.filter(d => d.year === year);
-      var geoData = topojson.feature(mapData, mapData.objects.countries).features;
-
+      // update charts
       updateMap(year, unit, yearData, geoData);
       updatePie(year, continents, yearData);
 
