@@ -64,10 +64,8 @@ d3.queue()
       updatePie(year, continents, yearData);
       
       var selectedCountry = d3.select(".selected");
-      if (selectedCountry.node()) {
-        var countryData = allData.filter(d => d.countryCode === selectedCountry.attr("id"));
-        updateBars(year, unit, countryData, true, yearRange);
-      }
+      var countryData = selectedCountry.node() ? allData.filter(d => d.countryCode === selectedCountry.attr("id")) : [];
+      updateBars(year, unit, countryData, true, yearRange);
     }
   });
 

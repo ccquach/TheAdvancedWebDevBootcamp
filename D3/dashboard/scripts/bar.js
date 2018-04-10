@@ -4,31 +4,14 @@ function drawBars(yearRange, unit) {
         .attr("width", width)
         .attr("height", height / 2);
 
-  // scales
-  var xScale =
-    d3.scaleLinear()
-      .domain(yearRange)
-      .range([padding, width - padding]);
-
-  var yScale =
-    d3.scaleLinear()
-      .range([height / 2 - padding, 0]);
-
   // axis
   barSelection
     .append("g")
-      .classed("x-axis", true)
-      .attr("transform", `translate(${padding / 2}, ${height / 2 - padding / 2})`)
-      .call(
-        d3.axisBottom(xScale)
-          .tickFormat(d3.format("d"))
-      );
+      .classed("x-axis", true);
 
   barSelection
     .append("g")
-      .classed("y-axis", true)
-      .attr("transform", `translate(${padding * 1.5 - 10}, ${padding / 2})`)
-      .call(d3.axisLeft(yScale).ticks(0));
+      .classed("y-axis", true);
 
   // y-axis label
   barSelection
@@ -37,7 +20,7 @@ function drawBars(yearRange, unit) {
       .classed("y-label", true)
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 4)
-      .attr("dy", padding / 4 - 9)
+      .attr("dy", "0.7em")
       .attr("text-anchor", "middle");
 
   // title
@@ -46,19 +29,27 @@ function drawBars(yearRange, unit) {
       .classed("bar-title", true)
       .text("Click on a country to see annual trends.")
       .attr("x", width / 2)
-      .attr("y", padding / 4)
+      .attr("y", "0.7em")
       .attr("text-anchor", "middle")
       .style("font-size", "1.5em");
 }
 
 function updateBars(year, unit, data, selected, yearRange) {
-  var barPadding = 2;
+  var barPadding = 1;
   var numBars = yearRange[1] - yearRange[0] + 1;
-  var barWidth = (width - padding * 1.5) / numBars - barPadding;
+
+  var padding = {
+    top: 20,
+    right: 20,
+    bottom: 20,
+    left: 100
+  };
+
+  var barWidth = (width - padding.left - padding.right) / numBars - barPadding;
 
   var t =
     d3.transition()
-      .duration(750)
+      .duration(1000)
       .ease(d3.easeBounceOut);
 
   // get country data
@@ -68,17 +59,25 @@ function updateBars(year, unit, data, selected, yearRange) {
   var xScale =
     d3.scaleLinear()
       .domain(yearRange)
-      .range([padding * 1.5, width - padding / 2]);
+      .range([padding.left, width - padding.right]);
 
   var yScale =
     d3.scaleLinear()
       .domain([0, d3.max(countryData, d => d[unit])])
-      .range([height / 2 - padding, 0]);
+      .range([height / 2 - padding.bottom, padding.top]);
 
-  // y-axis
+  // axis
+  d3.select(".x-axis")
+    .attr("transform", `translate(0, ${height / 2 - padding.bottom})`)
+    .call(
+        d3.axisBottom(xScale)
+          .tickFormat(d3.format("d"))
+      );
+
   d3.select(".y-axis")
+    .attr("transform", `translate(${padding.left - 10}, 0)`)
     .transition()
-    .duration(500)
+    .duration(1000)
       .call(d3.axisLeft(yScale));
 
   d3.select(".y-label")
@@ -99,30 +98,29 @@ function updateBars(year, unit, data, selected, yearRange) {
     .exit()
     .transition(t)
     .delay((d, i, nodes) => (nodes.length - i - 1) * 100)
-    .attr("y", height / 2 - padding / 2)
+    .attr("y", height / 2 - padding.bottom)
     .attr("height", 0)
     .remove();
 
   barUpdate
     .enter()
     .append("rect")
-      .attr("x", d => xScale(d.year) - 10)
-      .attr("y", height / 2 - padding / 2)
+      .attr("y", height / 2 - padding.bottom)
       .attr("height", 0)
     .merge(barUpdate)
+      .attr("x", d => xScale(d.year) - 10)
+      .attr("width", barWidth)
       .attr("fill", d => d.year === year ? "#009973" : "#00cc99")
       .on("mousemove touchmove", d => showTooltip(d, unit))
       .on("mouseout touchend", hideTooltip)
       .transition(t)
       .delay((d, i) => i * 100)
-        .attr("width", barWidth)
         .attr("height", d => {
           var data = d[unit];
-          return data ? height / 2 - padding - yScale(d[unit]) : 0;
+          return data ? height / 2 - padding.bottom - yScale(d[unit]) : 0;
         })
         .attr("y", d => {
           var data = d[unit];
-          return data ? yScale(d[unit]) + padding / 2 : height / 2 - padding / 2;
-        })
-        .attr("x", d => xScale(d.year) - 10);
+          return data ? yScale(d[unit]) : height / 2 - padding.bottom;
+        });
 }
