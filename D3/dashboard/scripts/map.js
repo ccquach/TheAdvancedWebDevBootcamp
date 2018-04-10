@@ -9,7 +9,7 @@ function drawMap(year, unit, geoData) {
     .append("text")
       .classed("map-title", true)
       .attr("x", width / 2)
-      .attr("y", "1.5em")
+      .attr("dy", "0.7em")
       .attr("text-anchor", "middle")
       .style("font-size", "1.5em");
 

@@ -1,6 +1,5 @@
 var width = d3.select(".group").node().offsetWidth;
 var height = 500;
-var padding = 80;
 
 d3.queue()
   .defer(d3.json, "//unpkg.com/world-atlas@1.1.4/world/50m.json")
