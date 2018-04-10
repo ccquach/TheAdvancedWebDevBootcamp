@@ -73,12 +73,12 @@ function updateMap(year, unit, yearRange, yearData, geoData, allData) {
 
   // fill scale
   var maxEmissions = d3.max(yearData, d => d[unit]);
+  var colors = ["#f1c40f", "#e67e22", "#e74c3c", "#c0392b"]
 
   var fScale =
     d3.scaleLinear()
-      .domain(d3.extent(yearData, d => d[unit]))
-      .range(["#ffcc00", "#4f0000"])
-      .interpolate(d3.interpolateHsl);
+      .domain([0, maxEmissions * 0.25, maxEmissions * 0.5, maxEmissions])
+      .range(colors);
 
   d3.selectAll(".country")
     .transition()
