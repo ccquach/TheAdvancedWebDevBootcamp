@@ -1,5 +1,5 @@
-var width = 800;
-var height = 700;
+var width = d3.select(".group").node().offsetWidth;
+var height = 500;
 var padding = 80;
 
 d3.queue()

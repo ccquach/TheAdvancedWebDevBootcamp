@@ -16,8 +16,8 @@ function drawMap(year, unit, geoData) {
   // draw map
   var projection =
     d3.geoMercator()
-      .scale(100)
-      .translate([width / 2, height / 1.4]);
+      .scale(80)
+      .translate([width / 2, height / 1.5]);
 
   var path =
     d3.geoPath()
