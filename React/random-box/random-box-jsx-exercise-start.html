@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSX Exercise</title>
+    <script src="https://unpkg.com/react@16.0.0-rc.2/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16.0.0-rc.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="text/babel">
+    class RandomBox extends React.Component {
+      render() {
+        const colors = ["red", "green", "blue", "purple"];
+        const divStyles = { 
+          display: 'inline-block',
+          padding: '40px 80px', 
+          color: "white", 
+          fontSize: Math.floor(Math.random() * 20 + 20),
+          backgroundColor: colors[Math.floor(Math.random() * colors.length)]
+        };
+        return (
+          <div style={divStyles}>
+            <p>Random Box</p>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<RandomBox />, document.getElementById('app'));
+  </script>
+</body>
+</html>
