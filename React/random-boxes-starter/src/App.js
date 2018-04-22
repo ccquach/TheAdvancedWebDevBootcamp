@@ -8,7 +8,6 @@ const Box = props => (
 class App extends Component {
   constructor(props) {
     super(props);
-
     // default boxes
     let boxes = [];
     for (let i = 0; i < 32; i++) {
@@ -18,7 +17,7 @@ class App extends Component {
       boxes
     };
 
-    setTimeout(() => {
+    setInterval(() => {
       const randBoxIdx = Math.floor(
         Math.random() * 
         this.state.boxes.length
@@ -27,7 +26,7 @@ class App extends Component {
         Math.random() *
         props.allColors.length
       );
-
+      
       const boxes = this.state.boxes.map((box, i) => {
         if (i === randBoxIdx) return props.allColors[randColor];
         return box;
@@ -39,9 +38,9 @@ class App extends Component {
   }
   
   render() {
-    const boxes = this.state.boxes.map(color => (
+    const boxes = this.state.boxes.map((color, idx) => (
       <Box
-        key={color}
+        key={idx}
         color={color}
       />
     ));
