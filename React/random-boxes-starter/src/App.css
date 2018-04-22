@@ -1,0 +1,11 @@
+.App {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.App div {
+  flex-grow: 1;
+  width: 12%;
+}
