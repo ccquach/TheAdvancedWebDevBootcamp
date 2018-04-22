@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
+const NUM_BOXES = 32;
+
 const Box = props => (
   <div style={{ backgroundColor: props.color }}></div>
 );
@@ -10,7 +12,7 @@ class App extends Component {
     super(props);
     // default boxes
     let boxes = [];
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < NUM_BOXES; i++) {
       boxes.push(props.allColors[i]);
     }
     this.state = {
