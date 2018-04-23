@@ -1,0 +1,13 @@
+.tile-board {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.tile {
+  min-width: 150px;
+  height: 150px;
+  border: 4px solid slategray;
+  border-radius: 18px;
+  margin: 10px;
+}
