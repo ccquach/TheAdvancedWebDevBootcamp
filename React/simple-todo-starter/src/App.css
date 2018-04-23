@@ -1,0 +1,14 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.todo-list {
+  width: 500px;
+  margin-top: 20px;
+}
+
+.todo-item {
+  padding: 5px;
+}
