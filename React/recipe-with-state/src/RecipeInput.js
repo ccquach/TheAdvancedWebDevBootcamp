@@ -3,7 +3,8 @@ import './RecipeInput.css';
 
 class RecipeInput extends Component {
   static defaultProps = {
-    onClose() {}
+    onClose() {},
+    onSave() {}
   }
 
   constructor(props) {
