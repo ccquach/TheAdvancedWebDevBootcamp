@@ -19,22 +19,38 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const tiles = [];
-    for (let i = 0; i < NUM_TILES; i++) {
-      tiles.push({
-        id: i,
-        color: props.allColors[i] ? props.allColors[i] : props.allColors[i - NUM_TILES / 2],
-        tileState: TileState.HIDING
-      });
-    }
+    const tiles = this.getTiles();
     this.state = {
       tiles: this.shuffle(tiles),
       numShowing: 0,
       tilesShowing: []
     };
 
+    this.reset = this.reset.bind(this);
     this.handleSelected = this.handleSelected.bind(this);
     this.compareTiles = this.compareTiles.bind(this);
+  }
+
+  getTiles() {
+    const tiles = [];
+    const {allColors} = this.props;
+    for (let i = 0; i < NUM_TILES; i++) {
+      tiles.push({
+        id: i,
+        color: allColors[i] ? allColors[i] : allColors[i - NUM_TILES / 2],
+        tileState: TileState.HIDING
+      });
+    }
+    return tiles;
+  }
+
+  reset() {
+    const tiles = this.getTiles();
+    this.setState({
+      tiles: this.shuffle(tiles),
+      numShowing: 0,
+      tilesShowing: []
+    });
   }
 
   // Fisher-Yates shuffle algorithm
@@ -102,7 +118,9 @@ class App extends Component {
     const {tiles} = this.state;
     return (
       <div className="App">
-        <Navbar />
+        <Navbar 
+          onNewGame={this.reset}
+        />
         <TileBoard 
           tiles={tiles}
           onTileClick={this.handleSelected}

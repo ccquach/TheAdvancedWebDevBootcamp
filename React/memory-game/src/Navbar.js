@@ -6,7 +6,7 @@ class Navbar extends Component {
     return (
       <header>
         <h1><a>Memory Game</a></h1>
-        <h3><a>New Game</a></h3>
+        <h3><a onClick={this.props.onNewGame}>New Game</a></h3>
       </header>
     );  
   }
