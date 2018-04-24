@@ -10,4 +10,5 @@
   border: 4px solid slategray;
   border-radius: 18px;
   margin: 10px;
+  transition: background-color 0.5s linear;
 }

@@ -5,7 +5,7 @@ const Tile = ({id, color, onTileClick}) => (
   <div 
     className="tile" 
     style={{backgroundColor: color}}
-    onClick={() => onTileClick(id)}
+    onClick={() => {onTileClick(id)}}
   />
 )
 

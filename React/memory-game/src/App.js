@@ -19,11 +19,11 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    let tiles = [];
+    const tiles = [];
     for (let i = 0; i < NUM_TILES; i++) {
       tiles.push({
         id: i,
-        color: props.allColors[i] ? props.allColors[i] : props.allColors[i - 8],
+        color: props.allColors[i] ? props.allColors[i] : props.allColors[i - NUM_TILES / 2],
         tileState: TileState.HIDING
       });
     }
@@ -34,6 +34,7 @@ class App extends Component {
     };
 
     this.handleSelected = this.handleSelected.bind(this);
+    this.compareTiles = this.compareTiles.bind(this);
   }
 
   // Fisher-Yates shuffle algorithm
@@ -46,8 +47,10 @@ class App extends Component {
   }
 
   handleSelected(id) {
+    let newTileSelected = false;
     const tiles = this.state.tiles.map(tile => {
-      if (tile.id === id) {
+      if (tile.id === id && tile.tileState === TileState.HIDING) {
+        newTileSelected = true;
         return {
           ...tile,
           tileState: TileState.SHOWING
@@ -55,9 +58,41 @@ class App extends Component {
       }
       return tile;
     });
-    this.setState({
-      tiles
-    });
+    if (newTileSelected) {
+      this.setState((prevState, props) => {
+        const {tilesShowing} = this.state;
+        const selectedTile = this.state.tiles.find(tile => tile.id === id);
+        return {
+          tiles,
+          numShowing: prevState.numShowing + 1,
+          tilesShowing: [...tilesShowing, selectedTile.color]
+        }
+      }, () => {
+        this.compareTiles();
+      });
+    }
+  }
+
+  compareTiles() {
+    const {numShowing, tilesShowing} = this.state;
+    if (numShowing === 2) {
+      let tileState = TileState.HIDING;
+      if (tilesShowing[0] === tilesShowing[1]) tileState = TileState.MATCHING;
+      const tiles = this.state.tiles.map(tile => {
+        if (tile.tileState === TileState.SHOWING) {
+          return {
+            ...tile,
+            tileState
+          }
+        }
+        return tile;
+      });
+      this.setState({
+        tiles,
+        numShowing: 0,
+        tilesShowing: []
+      });
+    }
   }
 
   render() {
