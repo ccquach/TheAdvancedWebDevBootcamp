@@ -47,6 +47,7 @@ class App extends Component {
   }
 
   handleSelected(id) {
+    const {numShowing} = this.state;
     let newTileSelected = false;
     const tiles = this.state.tiles.map(tile => {
       if (tile.id === id && tile.tileState === TileState.HIDING) {
@@ -58,7 +59,7 @@ class App extends Component {
       }
       return tile;
     });
-    if (newTileSelected) {
+    if (newTileSelected && numShowing < 2) {
       this.setState((prevState, props) => {
         const {tilesShowing} = this.state;
         const selectedTile = this.state.tiles.find(tile => tile.id === id);
@@ -87,11 +88,13 @@ class App extends Component {
         }
         return tile;
       });
-      this.setState({
-        tiles,
-        numShowing: 0,
-        tilesShowing: []
-      });
+      setTimeout(() => {
+        this.setState({
+          tiles,
+          numShowing: 0,
+          tilesShowing: []
+        });
+      }, 1000);
     }
   }
 
