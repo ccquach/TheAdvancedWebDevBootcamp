@@ -16,7 +16,7 @@ class TileBoard extends Component {
       <Tile 
         key={tile.id} 
         id={tile.id}
-        color={tile.tileState === 1 || tile.tileState === 2 ? tile.color : "slategray"} 
+        color={tile.tileState !== 0 ? tile.color : "slategray"} 
         onTileClick={onTileClick}
       />
     ));
