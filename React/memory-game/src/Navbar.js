@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Navbar.css';
 
-class Navbar extends Component {
-  render() {
-    return (
-      <header>
-        <h1><a>Memory Game</a></h1>
-        <h3><a onClick={this.props.onNewGame}>New Game</a></h3>
-      </header>
-    );  
-  }
-}
+const Navbar = ({onNewGame}) => (
+  <header>
+    <h1><a>Memory Game</a></h1>
+    <nav>
+      <li><a onClick={onNewGame}>New Game</a></li>
+    </nav>
+  </header>
+);
 
 export default Navbar;

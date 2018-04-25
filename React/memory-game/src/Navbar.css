@@ -5,21 +5,33 @@ header {
   align-items: center;
   background-color: #2c3e50;
   color: white;
+  padding: 15px;
 }
 
-header h1 {
-  margin-left: 15px;
+h1, nav {
+  margin: auto 15px;
 }
 
-header h3 {
-  margin-right: 15px;
+nav li {
+  list-style: none;
 }
 
 header a {
+  text-decoration: none;
   opacity: 0.9;
   cursor: pointer;
 }
 
 header a:hover {
   opacity: 1;
+}
+
+@media (max-width: 700px) {
+  header {
+    flex-direction: column;
+    justify-content: center;
+  }
+  h1 {
+    margin-bottom: 15px;
+  }
 }
