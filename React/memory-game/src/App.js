@@ -76,7 +76,7 @@ class App extends Component {
       return tile;
     });
     if (newTileSelected && numShowing < 2) {
-      this.setState((prevState, props) => {
+      this.setState(prevState => {
         const {tilesShowing} = this.state;
         const selectedTile = this.state.tiles.find(tile => tile.id === id);
         return {
