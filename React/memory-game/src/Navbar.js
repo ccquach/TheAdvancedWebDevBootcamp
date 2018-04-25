@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Navbar.css';
 
 const Navbar = ({onNewGame}) => (
@@ -9,5 +10,9 @@ const Navbar = ({onNewGame}) => (
     </nav>
   </header>
 );
+
+Navbar.propTypes = {
+  onNewGame: PropTypes.func.isRequired
+}
 
 export default Navbar;

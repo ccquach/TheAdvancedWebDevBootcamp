@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './TileBoard.css';
 
 const Tile = ({id, color, onTileClick}) => (
@@ -8,6 +9,12 @@ const Tile = ({id, color, onTileClick}) => (
     onClick={() => {onTileClick(id)}}
   />
 )
+
+Tile.propTypes = {
+  id: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
+  onTileClick: PropTypes.func.isRequired
+}
 
 class TileBoard extends Component {
   render() {
@@ -27,6 +34,11 @@ class TileBoard extends Component {
       </div>
     );
   }
+}
+
+TileBoard.propTypes = {
+  tiles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onTileClick: PropTypes.func.isRequired
 }
 
 export default TileBoard;
