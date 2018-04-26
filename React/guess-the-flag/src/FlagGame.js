@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './FlagGame.css';
 
-const FlagOption = ({country, onGuess}) => (
+const FlagOption = ({country, guess, onGuess}) => (
   <div>
     <input 
       type="radio"
       id={country.name}
-      name="country"
+      name="country-choice"
+      checked={guess === country.name}
       value={country.name}
       onClick={(e) => onGuess(e.target.value)}
     />
@@ -130,7 +131,7 @@ class FlagGame extends Component {
   }
 
   render() {
-    const {hasGuessed, isCorrect, countries, answer} = this.state;
+    const {hasGuessed, isCorrect, countries, answer, guess} = this.state;
     let view = <div className="flag-game">Loading game...</div>;
 
     if (countries && countries.length > 0) {
@@ -140,6 +141,7 @@ class FlagGame extends Component {
         <FlagOption 
           key={country.name} 
           country={country}
+          guess={guess}
           onGuess={this.handleGuess}
         />
       ));
