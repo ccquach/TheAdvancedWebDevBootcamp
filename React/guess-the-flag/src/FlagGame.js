@@ -25,7 +25,7 @@ FlagOption.propTypes = {
 const FlagDisplay = ({answer}) => (
   <img 
     src={answer.flag} 
-    alt={`{answer.name} flag`} 
+    alt={"Guess the flag"} 
   />
 );
 
