@@ -1,6 +1,12 @@
-.flag-game {
+.wrapper {
   flex: 1 1 auto;
   background-color: #ecf0f1;
+  display: flex;
+  flex-direction: column;
+}
+
+.flag-game {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -31,7 +37,7 @@
 }
 
 .flag-options label {
-  margin-left: 2px;
+  margin-left: 5px;
 }
 
 .flag-options button {
