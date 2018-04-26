@@ -1,0 +1,85 @@
+.flag-game {
+  flex: 1 1 auto;
+  background-color: #ecf0f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flag-options {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.flag-options div {
+  margin: 3px 0;
+  font-size: 1.2em;
+}
+
+.flag-options p {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.flag-options input {
+  margin-left: 25px;
+}
+
+.flag-options label {
+  margin-left: 2px;
+}
+
+.flag-options button {
+  font-size: 1.1em;
+  padding: 4px 8px;
+  color: white;
+  background-color: #7096ef;
+  border: none;
+  border-radius: 6px;
+  opacity: 0.9;
+  cursor: pointer;
+  margin-left: 25px;
+}
+
+.flag-options button:hover {
+  opacity: 1;
+}
+
+.flag-options button:focus {
+  outline: 0;
+}
+
+img {
+  width: 600px;
+  height: auto;
+  border: 1.5px solid black;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .flag-options {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flag-options div {
+    margin-bottom: 10px;
+  }
+
+  .flag-options input {
+    margin: 0;
+  }
+
+  .flag-options button {
+    margin: 10px auto;
+  }
+
+  img {
+    width: 400px;
+  }
+}
