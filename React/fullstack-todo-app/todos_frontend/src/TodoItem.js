@@ -2,14 +2,14 @@ import React from 'react';
 import './TodoItem.css';
 
 const TodoItem = ({name, completed, onDelete, onToggle}) => (
-  <li>
+  <li className="task">
     <span 
-      style={{ textDecoration: completed ? 'line-through' : 'none' }}
+      className={ completed ? "done" : null }
       onClick={onToggle}  
     >
       {name}
     </span>
-    <span onClick={onDelete}> X </span>
+    <span className="delete-button" onClick={onDelete}> X </span>
   </li>
 )
 

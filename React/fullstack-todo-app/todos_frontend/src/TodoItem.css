@@ -1,0 +1,34 @@
+.task {
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  font-size: 20px;
+  padding: 0 20px;
+  color: #34495e;
+  transition: all .3s ease;
+}
+
+.task:hover {
+  background: rgba(0, 0, 0, .02);
+  cursor: pointer;
+}
+
+.task:hover span {
+  opacity: 1;
+}
+
+.done {
+  text-decoration: line-through;
+  color: #bdc3c7;
+}
+
+li .delete-button {
+  float: right;
+  color: #c0392b;
+  transition: all 0.3s;
+  opacity: 0;
+}
+
+li .delete-button:hover {
+  color: #e74c3c;
+}
