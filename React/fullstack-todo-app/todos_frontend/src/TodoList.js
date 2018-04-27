@@ -70,11 +70,39 @@ class TodoList extends Component {
     });
   }
 
+  deleteTodo(id) {
+    const deleteUrl = API_URL + id;
+    fetch(deleteUrl, {
+      method: 'DELETE',
+    })
+    .then(res => {
+      if (!res.ok) {
+        // server-side error
+        if (res.status >= 400 && res.status < 500) {
+          return res.json().then(data => {
+            let err = { errorMessage: data.message };
+            throw err;
+          });
+        } else {
+          // server down
+          let err = { errorMessage: 'Please try again later, server is not responding' };
+          throw err;
+        }
+      }
+      return res.json();
+    })
+    .then(() => {
+      const todos = this.state.todos.filter(todo => todo._id !== id);
+      this.setState({todos});
+    });
+  }
+
   render() {
     const todos = this.state.todos.map(t => (
       <TodoItem
         key={t._id}
         {...t}
+        onDelete={this.deleteTodo.bind(this, t._id)}
       />
     ));
     return (
