@@ -73,7 +73,7 @@ function updateTodo(todo) {
         data: updateData
     })
     .then(function(updatedTodo) {
-        todo.toggleClass('done');
+        todo.toggleClass('done', isDone);
         todo.data('completed', isDone);
     });
 }
