@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import TodoForm from './TodoForm';
 import TodoItem from './TodoItem';
 import './TodoList.css';
-
-const API_URL = '/api/todos/';
+import * as apiCalls from './api';
 
 class TodoList extends Component {
   constructor(props) {
@@ -18,118 +17,30 @@ class TodoList extends Component {
     this.loadTodos();
   }
 
-  loadTodos() {
-    fetch(API_URL)
-    .then(res => {
-      if (!res.ok) {
-        // server-side error
-        if (res.status >= 400 && res.status < 500) {
-          return res.json().then(data => {
-            let err = { errorMessage: data.message };
-            throw err;
-          });
-        } else {
-          // server down
-          let err = { errorMessage: 'Please try again later, server is not responding' };
-          throw err;
-        }
-      }
-      return res.json();
-    })
-    .then(todos => this.setState({todos}));
+  async loadTodos() {
+    let todos = await apiCalls.getTodos();
+    this.setState({todos});
   }
 
-  addTodo(val) {
-    fetch(API_URL, {
-      method: 'POST',
-      headers: new Headers ({
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify({name: val})
-    })
-    .then(res => {
-      if (!res.ok) {
-        // server-side error
-        if (res.status >= 400 && res.status < 500) {
-          return res.json().then(data => {
-            let err = { errorMessage: data.message };
-            throw err;
-          });
-        } else {
-          // server down
-          let err = { errorMessage: 'Please try again later, server is not responding' };
-          throw err;
-        }
-      }
-      return res.json();
-    })
-    .then(newTodo => {
-      this.setState({
-        todos: [...this.state.todos, newTodo]
-      });
-    });
+  async addTodo(val) {
+    let newTodo = await apiCalls.createTodo(val);
+    this.setState({todos: [...this.state.todos, newTodo]});
   }
 
-  deleteTodo(id) {
-    const deleteUrl = API_URL + id;
-    fetch(deleteUrl, {
-      method: 'DELETE'
-    })
-    .then(res => {
-      if (!res.ok) {
-        // server-side error
-        if (res.status >= 400 && res.status < 500) {
-          return res.json().then(data => {
-            let err = { errorMessage: data.message };
-            throw err;
-          });
-        } else {
-          // server down
-          let err = { errorMessage: 'Please try again later, server is not responding' };
-          throw err;
-        }
-      }
-      return res.json();
-    })
-    .then(() => {
-      const todos = this.state.todos.filter(todo => todo._id !== id);
-      this.setState({todos});
-    });
+  async deleteTodo(id) {
+    await apiCalls.removeTodo(id);
+    const todos = this.state.todos.filter(todo => todo._id !== id);
+    this.setState({todos});
   }
 
-  toggleTodo(todo) {
-    const updateUrl = API_URL + todo._id;
-    fetch(updateUrl, {
-      method: 'PUT',
-      headers: new Headers ({
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify({completed: !todo.completed})
-    })
-    .then(res => {
-      if (!res.ok) {
-        // server-side error
-        if (res.status >= 400 && res.status < 500) {
-          return res.json().then(data => {
-            let err = { errorMessage: data.message };
-            throw err;
-          });
-        } else {
-          // server down
-          let err = { errorMessage: 'Please try again later, server is not responding' };
-          throw err;
-        }
-      }
-      return res.json();
-    })
-    .then(updatedTodo => {
-      const todos = this.state.todos.map(t => (
-        (t._id === updatedTodo._id) ?
-        {...t, completed: !t.completed} :
-        t
-      ));
-      this.setState({todos});
-    });
+  async toggleTodo(todo) {
+    let updatedTodo = await apiCalls.updateTodo(todo);
+    const todos = this.state.todos.map(t => (
+      (t._id === updatedTodo._id) ?
+      {...t, completed: !t.completed} :
+      t
+    ));
+    this.setState({todos});
   }
 
   render() {
