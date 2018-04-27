@@ -73,7 +73,7 @@ class TodoList extends Component {
   deleteTodo(id) {
     const deleteUrl = API_URL + id;
     fetch(deleteUrl, {
-      method: 'DELETE',
+      method: 'DELETE'
     })
     .then(res => {
       if (!res.ok) {
@@ -97,12 +97,48 @@ class TodoList extends Component {
     });
   }
 
+  toggleTodo(todo) {
+    const updateUrl = API_URL + todo._id;
+    fetch(updateUrl, {
+      method: 'PUT',
+      headers: new Headers ({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({completed: !todo.completed})
+    })
+    .then(res => {
+      if (!res.ok) {
+        // server-side error
+        if (res.status >= 400 && res.status < 500) {
+          return res.json().then(data => {
+            let err = { errorMessage: data.message };
+            throw err;
+          });
+        } else {
+          // server down
+          let err = { errorMessage: 'Please try again later, server is not responding' };
+          throw err;
+        }
+      }
+      return res.json();
+    })
+    .then(updatedTodo => {
+      const todos = this.state.todos.map(t => (
+        (t._id === updatedTodo._id) ?
+        {...t, completed: !t.completed} :
+        t
+      ));
+      this.setState({todos});
+    });
+  }
+
   render() {
     const todos = this.state.todos.map(t => (
       <TodoItem
         key={t._id}
         {...t}
         onDelete={this.deleteTodo.bind(this, t._id)}
+        onToggle={this.toggleTodo.bind(this, t)}
       />
     ));
     return (
