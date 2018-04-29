@@ -6,7 +6,7 @@ const Todo = ({todo, removeTodo, updateTodo }) => (
       style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
       onClick={updateTodo}
     >
-        {todo.task}
+      {todo.task}
     </span>
     <button onClick={removeTodo}>X</button>
   </li>
