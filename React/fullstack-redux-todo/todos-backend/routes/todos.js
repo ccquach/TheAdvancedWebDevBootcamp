@@ -14,6 +14,12 @@ router.post("/", function(req, res, next) {
     .catch(err => next(err));
 });
 
+router.put("/:id", function(req, res, next) {
+  Todo.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+    .then(todo => res.send(todo))
+    .catch(err => next(err));
+})
+
 router.delete("/:id", function(req, res, next) {
   Todo.findByIdAndRemove(req.params.id)
     .then(todo => res.send(todo))

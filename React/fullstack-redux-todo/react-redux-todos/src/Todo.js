@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Todo = ({todo, removeTodo, updateTodo }) => (
+const Todo = ({ todo, removeTodo, updateTodo }) => (
   <li>
     <span 
       style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
