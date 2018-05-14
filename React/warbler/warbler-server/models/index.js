@@ -17,3 +17,5 @@ mongoose.connect(databaseUri, databaseOptions)
   .then(() => console.log(`Database connected`))
   .catch(err => console.log(`Database connection error: ${err.message}`))
 ;
+
+module.exports.User = require('./user');
