@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const errorHandler = require('./handlers/error');
 const authRoutes = require('./routes/auth');
 const messagesRoutes = require('./routes/messages');
+const { loginRequired, ensureCorrectUser } = require('./middleware/auth');
 
 const PORT = 3001;
 
@@ -14,7 +15,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/users/:id/messages', messagesRoutes);
+app.use(
+  '/api/users/:id/messages', 
+  loginRequired, 
+  ensureCorrectUser, 
+  messagesRoutes
+);
 
 app.use(function(req, res, next) {
   let err = new Error('Not Found');
