@@ -9,8 +9,7 @@ const databaseOptions = {
   auth: {
     authdb: 'admin'
   },
-  keepAlive: true,
-  useMongoClient: true
+  keepAlive: true
 };
 
 mongoose.connect(databaseUri, databaseOptions)
