@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { postNewMessage } from '../store/actions/messages';
+import { removeError } from '../store/actions/errors';
 
 class MessageForm extends Component {
   constructor(props) {
@@ -12,15 +13,24 @@ class MessageForm extends Component {
 
   handleNewMessage = e => {
     e.preventDefault();
-    this.props.postNewMessage(this.state.message);
-    this.setState({
-      message: ''
-    });
-    this.props.history.push('/');
+    this.props
+      .postNewMessage(this.state.message)
+      .then(() => {
+        this.setState({ message: '' });
+        this.props.history.push('/');
+      })
+      .catch(() => {
+        return;
+      });
   };
 
   render() {
-    const { errors } = this.props;
+    const { errors, history, removeError } = this.props;
+
+    history.listen(() => {
+      removeError();
+    });
+
     return (
       <form onSubmit={this.handleNewMessage}>
         {errors.message && (
@@ -46,4 +56,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { postNewMessage })(MessageForm);
+export default connect(mapStateToProps, { postNewMessage, removeError })(
+  MessageForm
+);
