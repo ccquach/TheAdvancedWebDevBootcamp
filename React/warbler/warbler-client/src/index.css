@@ -8,12 +8,14 @@ body {
   margin-bottom: 1rem;
 }
 
-.navbar a {
+.navbar a,
+.navbar a:not([href]):not([tabindex]) {
   font-weight: bold;
   color: white;
 }
 
-.navbar a:hover {
+.navbar a:hover,
+.navbar a:not([href]):not([tabindex]):hover {
   color: white;
   text-decoration: underline;
   cursor: pointer;
@@ -34,6 +36,10 @@ ul.nav.navbar-nav li {
 .onboarding > .navbar {
   background-image: url('./images/nav-bg.png');
   background-size: 100% 100%;
+}
+
+.navbar-header {
+  margin: 0 auto;
 }
 
 /* Homepage */
@@ -67,4 +73,25 @@ ul.nav.navbar-nav li {
 
 #messages:not(.no-hover) .list-group-item:hover {
   background-color: #e6ecf0;
+}
+
+.timeline-image {
+  border-radius: 50px;
+  height: 48px;
+  width: 48px;
+  margin: 2px 30px 10px 10px;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+a.btn.btn-danger,
+a.btn.btn-danger:hover {
+  color: white;
+}
+
+/* Forms */
+form button[type='submit'] {
+  margin-top: 20px;
 }
